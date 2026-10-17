@@ -1,0 +1,3191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GuitarStudio Premium</title>
+    <meta name="theme-color" content="#101823" />
+    <meta name="application-name" content="GuitarStudio Premium" />
+    <meta name="description" content="Clases de guitarra, rutas de aprendizaje, metrónomo, afinación y práctica." />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    
+    <style>
+        /* ============================================
+           ROOT VARIABLES
+           ============================================ */
+        :root {
+            --primary: #ff9800;
+            --primary-dark: #e68900;
+            --primary-light: #ffb74d;
+            --primary-gradient: linear-gradient(135deg, #ff9800, #e68900);
+            --bg-primary: #0a0a12;
+            --bg-secondary: #14141f;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #22223a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b8;
+            --text-muted: #6a6a82;
+            --success: #4CAF50;
+            --success-dark: #388E3C;
+            --danger: #ff4757;
+            --warning: #ffc107;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 12px 60px rgba(255, 152, 0, 0.15);
+            --border-color: rgba(255, 255, 255, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-gradient);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            filter: brightness(1.2);
+        }
+
+        /* ============================================
+           HEADER
+           ============================================ */
+        header {
+            position: relative;
+            padding: 80px 20px 60px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(10, 10, 18, 0.95), rgba(20, 20, 31, 0.98)),
+                        url("https://images.unsplash.com/photo-1511376777868-611b54f68947?auto=format&fit=crop&w=1350&q=80");
+            background-size: cover;
+            background-position: center;
+            isolation: isolate;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255, 152, 0, 0.05), transparent 70%);
+            animation: rotateGlow 30s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            box-shadow: 0 0 30px rgba(255, 152, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 64px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            position: relative;
+            z-index: 1;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        header .subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-top: 15px;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        header .versiculo {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 16px 30px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 400;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        header .versiculo .versiculo-texto {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        header .versiculo .versiculo-ref {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        header .versiculo i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        /* ============================================
+           NAVEGACIÓN CON MENÚ DE INICIO
+           ============================================ */
+        .nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 18, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+            padding: 8px 0;
+        }
+
+        .nav-container.scrolled {
+            background: rgba(10, 10, 18, 0.98);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--text-primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-logo i {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-menu button {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            padding: 8px 18px;
+            border: 1px solid transparent;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-menu button:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        .nav-menu button.activo {
+            background: var(--primary-gradient);
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.25);
+        }
+
+        .nav-menu button .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .nav-menu button.activo .badge {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-actions button {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 14px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-actions button:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+        }
+
+        .nav-actions .fav-btn.activo {
+            color: #ff4757;
+            border-color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        /* ============================================
+           CONTROLES
+           ============================================ */
+        .controls-bar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .controls-bar .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 4px 14px 4px 10px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+
+        .controls-bar .control-group label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .controls-bar .control-group select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .controls-bar .control-group select:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .controls-bar .zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .controls-bar .zoom-control button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls-bar .zoom-control button:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .controls-bar .zoom-level {
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-width: 45px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* ============================================
+           CONTENIDO PRINCIPAL
+           ============================================ */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px 20px 40px;
+            transition: transform 0.3s ease;
+        }
+
+        /* ============================================
+           ESTADÍSTICAS
+           ============================================ */
+        .stats-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 18px 24px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            justify-content: space-around;
+        }
+
+        .stats-bar .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .stats-bar .stat-item i {
+            color: var(--primary);
+            font-size: 20px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .stats-bar .stat-item .stat-value {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        /* ============================================
+           FILTROS
+           ============================================ */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-bar .filter-left {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .filter-bar .filter-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-bar .search-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+            min-width: 250px;
+            font-family: 'Inter', sans-serif;
+            flex: 1;
+        }
+
+        .filter-bar .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .filter-bar .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .filter-bar .filter-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .filter-bar .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+        }
+
+        .filter-bar .filter-btn.activo {
+            background: rgba(255, 71, 87, 0.12);
+            border-color: #ff4757;
+            color: #ff4757;
+        }
+
+        .filter-bar .filter-btn.primary-btn {
+            background: var(--primary-gradient);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .filter-bar .filter-btn.primary-btn:hover {
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* ============================================
+           SECCIONES
+           ============================================ */
+        .seccion {
+            display: none;
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .seccion.activa {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title .count {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+
+        .section-title .icon {
+            color: var(--primary);
+        }
+
+        /* ============================================
+           GRID DE CLASES
+           ============================================ */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 152, 0, 0.2);
+            box-shadow: var(--shadow-hover);
+            background: var(--bg-card-hover);
+        }
+
+        .card .thumbnail {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background: var(--bg-secondary);
+            overflow: hidden;
+        }
+
+        .card .thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .card:hover .thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .card .thumbnail .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .card:hover .thumbnail .play-overlay {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .card .thumbnail .play-overlay i {
+            color: #fff;
+            font-size: 24px;
+            margin-left: 4px;
+        }
+
+        .card .thumbnail .badge-status {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card .thumbnail .badge-status.visto {
+            color: #4CAF50;
+        }
+
+        .card .thumbnail .badge-status.favorito-badge {
+            bottom: 45px;
+            color: #ff4757;
+        }
+
+        .card .card-body {
+            padding: 18px 20px 16px;
+        }
+
+        .card .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card .card-number {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .card .card-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .card .card-actions .btn-play {
+            flex: 1;
+            padding: 10px 20px;
+            background: var(--primary-gradient);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .card .card-actions .btn-play:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.3);
+        }
+
+        .card .card-actions .btn-fav {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .card .card-actions .btn-fav:hover {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: #ff4757;
+            color: #ff4757;
+        }
+
+        .card .card-actions .btn-fav.favorito {
+            background: rgba(255, 71, 87, 0.15);
+            border-color: #ff4757;
+            color: #ff4757;
+        }
+
+        /* ============================================
+           PLANIFICADOR DIARIO - CHECKLIST
+           ============================================ */
+        .planner-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .planner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .planner-header .planner-title {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .planner-header .planner-title i {
+            color: var(--primary);
+        }
+
+        .planner-header .planner-date {
+            color: var(--text-secondary);
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 16px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+
+        .planner-header .planner-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .planner-header .planner-progress .progress-bar {
+            width: 150px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .planner-header .planner-progress .progress-bar .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .planner-header .planner-progress .progress-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 40px;
+        }
+
+        /* Lista de tareas */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 152, 0, 0.15);
+        }
+
+        .task-item.completada {
+            opacity: 0.6;
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .task-item.completada .task-text {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+
+        .task-item .task-check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: transparent;
+            font-size: 12px;
+        }
+
+        .task-item .task-check:hover {
+            border-color: var(--primary);
+        }
+
+        .task-item .task-check.completado {
+            background: var(--success);
+            border-color: var(--success);
+            color: #fff;
+        }
+
+        .task-item .task-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .task-item .task-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .task-item .task-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .task-item .task-meta i {
+            margin-right: 4px;
+        }
+
+        .task-item .task-meta .task-category {
+            display: inline-block;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .task-item .task-meta .task-category.calentamiento {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .task-item .task-meta .task-category.principal {
+            background: rgba(76, 175, 80, 0.15);
+            color: #4CAF50;
+        }
+
+        .task-item .task-meta .task-category.extra {
+            background: rgba(33, 150, 243, 0.15);
+            color: #2196F3;
+        }
+
+        .task-item .task-meta .task-category.teoria {
+            background: rgba(156, 39, 176, 0.15);
+            color: #9C27B0;
+        }
+
+        .task-item .task-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .task-item .task-actions button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .task-item .task-actions button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .task-item .task-actions .btn-edit:hover {
+            background: rgba(255, 193, 7, 0.15);
+            border-color: #ffc107;
+            color: #ffc107;
+        }
+
+        .task-item .task-actions .btn-delete:hover {
+            background: rgba(255, 71, 87, 0.15);
+            border-color: #ff4757;
+            color: #ff4757;
+        }
+
+        /* Formulario de tareas */
+        .task-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 16px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-sm);
+            border: 1px dashed var(--border-color);
+            margin-top: 16px;
+        }
+
+        .task-form input,
+        .task-form select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .task-form input:focus,
+        .task-form select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .task-form input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .task-form .task-input-text {
+            flex: 2;
+            min-width: 180px;
+        }
+
+        .task-form .task-input-hora {
+            width: 120px;
+        }
+
+        .task-form .task-input-categoria {
+            width: 150px;
+        }
+
+        .task-form .btn-add-task {
+            padding: 10px 24px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-form .btn-add-task:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.3);
+        }
+
+        .task-form .btn-add-task.cancel-edit {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        .task-form .btn-add-task.cancel-edit:hover {
+            background: rgba(255, 71, 87, 0.1);
+            color: #ff4757;
+        }
+
+        /* ============================================
+           MODAL DE EDICIÓN
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.abierto {
+            display: flex;
+        }
+
+        .modal-container {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-card);
+        }
+
+        .modal-header .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .modal-header .btn-close-modal {
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-header .btn-close-modal:hover {
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-body .modal-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .modal-body .modal-form-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .modal-body .modal-form-group input,
+        .modal-body .modal-form-group select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .modal-body .modal-form-group input:focus,
+        .modal-body .modal-form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .modal-body .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-body .modal-actions button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modal-body .modal-actions .btn-modal-save {
+            background: var(--primary-gradient);
+            color: #fff;
+        }
+
+        .modal-body .modal-actions .btn-modal-save:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.3);
+        }
+
+        .modal-body .modal-actions .btn-modal-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        .modal-body .modal-actions .btn-modal-cancel:hover {
+            background: rgba(255, 71, 87, 0.1);
+            color: #ff4757;
+        }
+
+        /* ============================================
+           VENTANA EMERGENTE DE REPRODUCCIÓN
+           ============================================ */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .popup-overlay.abierto {
+            display: flex;
+        }
+
+        .popup-container {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-card);
+        }
+
+        .popup-header .popup-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            margin-right: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .popup-header .btn-close-popup {
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .popup-header .btn-close-popup:hover {
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+        }
+
+        .popup-body {
+            padding: 30px 24px 24px;
+            text-align: center;
+        }
+
+        .popup-body .popup-icon {
+            font-size: 64px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .popup-body .popup-video-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .popup-body .popup-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .popup-body .popup-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .popup-body .popup-actions .btn-abrir-youtube {
+            padding: 14px 24px;
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .popup-body .popup-actions .btn-abrir-youtube:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 30px rgba(255, 0, 0, 0.3);
+        }
+
+        .popup-body .popup-actions .btn-popup-fav {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .popup-body .popup-actions .btn-popup-fav:hover {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: #ff4757;
+            color: #ff4757;
+        }
+
+        .popup-body .popup-actions .btn-popup-fav.favorito {
+            background: rgba(255, 71, 87, 0.15);
+            border-color: #ff4757;
+            color: #ff4757;
+        }
+
+        .popup-body .popup-actions .btn-popup-cerrar {
+            padding: 10px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .popup-body .popup-actions .btn-popup-cerrar:hover {
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           NOTIFICACIONES
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .toast {
+            background: rgba(10, 10, 18, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 16px 24px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 14px;
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.visible {
+            transform: translateX(0);
+        }
+
+        .toast .toast-icon {
+            font-size: 24px;
+        }
+
+        .toast .toast-message {
+            flex: 1;
+        }
+
+        /* ============================================
+           BOTÓN FLOTANTE DE SUBIR
+           ============================================ */
+        .btn-scroll-top {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: var(--primary-gradient);
+            color: #fff;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.3);
+            font-size: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .btn-scroll-top.visible {
+            display: flex;
+        }
+
+        .btn-scroll-top:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(255, 152, 0, 0.4);
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 42px;
+            }
+
+            header .versiculo {
+                font-size: 13px;
+                padding: 12px 20px;
+                max-width: 100%;
+            }
+
+            .nav-wrapper {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px 15px;
+            }
+
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-menu button {
+                font-size: 12px;
+                padding: 6px 14px;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .controls-bar {
+                gap: 10px;
+                padding: 8px 15px;
+            }
+
+            .controls-bar .control-group {
+                padding: 3px 10px 3px 8px;
+            }
+
+            .controls-bar .control-group label {
+                font-size: 11px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-bar .filter-left {
+                flex-direction: column;
+            }
+
+            .filter-bar .search-input {
+                min-width: auto;
+            }
+
+            .filter-bar .filter-right {
+                justify-content: center;
+            }
+
+            .stats-bar {
+                gap: 12px;
+                padding: 14px 16px;
+                flex-wrap: wrap;
+            }
+
+            .stats-bar .stat-item {
+                font-size: 13px;
+            }
+
+            .stats-bar .stat-item .stat-value {
+                font-size: 17px;
+            }
+
+            .planner-container {
+                padding: 16px;
+            }
+
+            .planner-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .planner-header .planner-progress {
+                justify-content: space-between;
+            }
+
+            .planner-header .planner-progress .progress-bar {
+                flex: 1;
+            }
+
+            .task-item {
+                flex-wrap: wrap;
+                padding: 12px 14px;
+            }
+
+            .task-item .task-info {
+                width: 100%;
+                order: 2;
+            }
+
+            .task-item .task-check {
+                order: 1;
+            }
+
+            .task-item .task-actions {
+                order: 3;
+                margin-left: auto;
+            }
+
+            .task-form {
+                flex-direction: column;
+            }
+
+            .task-form input,
+            .task-form select {
+                width: 100% !important;
+            }
+
+            .task-form .btn-add-task {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .popup-container {
+                max-width: 100%;
+                margin: 10px;
+            }
+
+            .popup-body {
+                padding: 20px 16px;
+            }
+
+            .popup-body .popup-video-title {
+                font-size: 17px;
+            }
+
+            .toast-container {
+                bottom: 15px;
+                right: 15px;
+                left: 15px;
+                max-width: none;
+            }
+
+            .modal-container {
+                max-width: 100%;
+                margin: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 32px;
+            }
+
+            header .subtitle {
+                font-size: 15px;
+            }
+
+            .nav-menu button {
+                font-size: 10px;
+                padding: 5px 10px;
+            }
+
+            .nav-menu button i {
+                font-size: 12px;
+            }
+
+            .card .card-title {
+                font-size: 14px;
+            }
+
+            .card .card-actions .btn-play {
+                font-size: 13px;
+                padding: 8px 16px;
+            }
+
+            .planner-header .planner-title {
+                font-size: 18px;
+            }
+
+            .task-item .task-text {
+                font-size: 14px;
+            }
+        }
+        /* Ajustes v6: lectura, accesibilidad y móviles */
+        .control-hint {color:var(--text-secondary);font-size:12px;display:flex;align-items:center;gap:8px}
+        .control-hint i {color:var(--primary)}
+        button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+            outline:2px solid var(--primary);outline-offset:3px
+        }
+        .card .thumbnail {cursor:pointer}
+        .nav-menu {row-gap:8px}
+        .nav-menu button {min-height:38px}
+        .task-item .task-text {overflow-wrap:anywhere}
+        .section-title {flex-wrap:wrap}
+        @media (max-width:768px) {
+            header {padding:44px 15px 35px}
+            .nav-wrapper {align-items:stretch}
+            .nav-menu {flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:5px 2px 10px;scrollbar-width:thin}
+            .nav-menu button {flex-shrink:0;font-size:12px;padding:8px 14px}
+            .nav-actions {justify-content:flex-end}
+            .main-content {padding:18px 14px 40px}
+            .filter-bar .filter-right button {flex:1;justify-content:center}
+            .stats-bar {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+            .stats-bar .stat-item {min-width:0}
+            .toast-container {width:auto}
+        }
+        @media (prefers-reduced-motion:reduce) {
+            *,*::before,*::after {animation-duration:0.01ms!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
+        }
+    
+/* GUITAR STUDIO | REDISEÑO PREMIUM */
+:root{--primary:#b6f46a;--primary-dark:#8ccc42;--primary-light:#d9ffa4;--primary-gradient:linear-gradient(135deg,#b6f46a,#79c2aa);--bg-primary:#0b1015;--bg-secondary:#111a22;--bg-card:#16212a;--bg-card-hover:#1b2b35;--text-primary:#f4f6f2;--text-secondary:#a4b5be;--text-muted:#8296a0;--border-color:rgba(208,237,224,.12);--shadow-hover:0 18px 50px rgba(0,0,0,.28);--radius:22px;--radius-sm:13px}
+body{background:radial-gradient(ellipse at 90% 1%,rgba(63,129,119,.13),transparent 37%),var(--bg-primary);letter-spacing:-.015em}
+header{padding:46px 20px 44px;background:linear-gradient(90deg,rgba(8,16,20,.95),rgba(7,16,21,.80)),url('https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=1600&q=80') center/cover}
+header:before{background:radial-gradient(circle,rgba(182,244,106,.07),transparent 60%)}
+header h1{font-size:clamp(42px,6vw,76px);color:#f7f9f5;background:none;-webkit-text-fill-color:currentColor;letter-spacing:-.065em;animation:none}
+header h1 span{color:var(--primary)}
+.hero-eyebrow,.eyebrow{font-size:11px;letter-spacing:.17em;font-weight:800;color:var(--primary);text-transform:uppercase}
+.hero-eyebrow{margin-bottom:9px;position:relative;z-index:2}
+header .subtitle{color:#d7e4e5;font-size:15px;margin-top:8px}
+header .versiculo{margin-top:20px;padding:12px 20px;max-width:700px;background:rgba(9,17,19,.55);border-radius:12px;font-size:12px;line-height:1.4;color:#b1c4c6}
+header .versiculo .versiculo-texto{margin-bottom:4px}
+header .versiculo .versiculo-ref{color:var(--primary);font-size:12px}
+.nav-container{background:rgba(12,19,24,.95);border-bottom:1px solid rgba(182,244,106,.13)}
+.nav-wrapper{max-width:1480px}.nav-logo{font-size:20px;letter-spacing:-.05em}.nav-logo i{color:var(--primary)}
+.nav-menu button{border-radius:12px;font-weight:600;font-size:13px}.nav-menu button.activo{background:rgba(182,244,106,.14);color:var(--primary);border:1px solid rgba(182,244,106,.27);box-shadow:none}
+.nav-menu button.activo .badge{background:rgba(182,244,106,.18)}
+.nav-actions button{border-radius:12px}.controls-bar{padding:8px 20px;background:rgba(14,23,29,.76)}
+.main-content{max-width:1480px;padding-top:28px}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;padding:0;border:0;background:transparent}
+.stats-bar .stat-item{min-height:92px;padding:18px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:18px;gap:15px;font-weight:600}
+.stats-bar .stat-item i{font-size:22px;background:rgba(182,244,106,.10);height:48px;width:48px;border-radius:14px;display:grid;place-items:center}
+.stats-bar .stat-item .stat-value{font-size:25px;color:#f5f8f7}
+.filter-bar .search-input,.filter-bar .filter-btn{border-radius:13px;background:var(--bg-secondary);min-height:46px}
+.filter-bar .filter-btn.primary-btn{color:#111b13}.section-title{font-size:25px;letter-spacing:-.045em}
+.grid{gap:20px;grid-template-columns:repeat(auto-fill,minmax(268px,1fr))}
+.card{border-radius:20px;box-shadow:0 5px 20px rgba(0,0,0,.08)}.card:hover{border-color:rgba(182,244,106,.42)}.card .card-body{padding:18px}.card .card-title{font-size:15px;min-height:43px}
+.card .thumbnail .play-overlay{background:rgba(9,20,22,.75);border-color:rgba(182,244,106,.35)}.card:hover .thumbnail .play-overlay{background:var(--primary)}.card:hover .thumbnail .play-overlay i{color:#142014}
+.card .card-actions .btn-play{color:#142014;border-radius:11px}.card .card-actions .btn-fav{border-radius:11px}
+.planner-container{background:var(--bg-secondary);border-radius:22px;padding:26px}.planner-header .planner-title{font-size:20px}
+.task-form .btn-add-task{color:#102014}.task-item{background:rgba(255,255,255,.025)}
+.welcome-panel{min-height:322px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(230px,.7fr);align-items:center;position:relative;overflow:hidden;padding:42px 45px;margin-bottom:32px;border:1px solid rgba(182,244,106,.18);border-radius:26px;background:radial-gradient(circle at 81% 45%,rgba(123,214,178,.22),transparent 43%),linear-gradient(120deg,#172a2d,#13252e 72%,#19342e)}
+.welcome-copy{position:relative;z-index:1}.welcome-copy h2{font-size:clamp(30px,3.4vw,48px);line-height:1.13;letter-spacing:-.06em;margin:14px 0;color:#fff}.welcome-copy h2 em{color:var(--primary);font-style:normal}
+.welcome-copy p{max-width:540px;color:#b7c8c7;line-height:1.8;font-size:14px}.welcome-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.welcome-buttons button{padding:13px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.15);cursor:pointer;font-weight:750;font-family:inherit}
+.welcome-primary{background:var(--primary);color:#112016}.welcome-secondary{background:rgba(255,255,255,.07);color:white}
+.welcome-art{justify-self:center;width:200px;height:200px;display:grid;place-items:center;position:relative;transform:rotate(-16deg)}.welcome-art>i{font-size:155px;color:#cdf994;filter:drop-shadow(0 16px 24px rgba(0,0,0,.35));z-index:2}.glow-orbit{position:absolute;width:230px;height:230px;border:1px solid rgba(182,244,106,.26);border-radius:50%;box-shadow:0 0 80px rgba(182,244,106,.10)}.art-tag{position:absolute;z-index:3;bottom:-28px;font-size:10px;color:#ddf6e9;white-space:nowrap;font-weight:750;letter-spacing:.17em;transform:rotate(16deg)}
+.practice-tools{margin-bottom:33px}.tool-heading{display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:18px}.tool-heading h3{font-size:25px;letter-spacing:-.04em;margin-top:3px}.tool-caption{font-size:12px;color:var(--text-secondary)}
+.tools-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.tool-card{background:var(--bg-secondary);padding:23px;border:1px solid var(--border-color);border-radius:20px;min-width:0}.tool-icon{width:43px;height:43px;background:rgba(182,244,106,.12);color:var(--primary);border-radius:13px;display:grid;place-items:center;font-size:19px;margin-bottom:14px}.tool-card h4{font-size:16px;margin-bottom:4px}.tool-card p{font-size:12px;line-height:1.6;color:var(--text-secondary);margin-bottom:16px;min-height:37px}
+.timer-display{font-size:43px;font-weight:800;letter-spacing:-.06em;font-variant-numeric:tabular-nums;margin:6px 0 8px}.timer-choices{display:flex;gap:7px;margin-bottom:14px}.timer-choices button{background:rgba(255,255,255,.05);color:var(--text-secondary);border:1px solid var(--border-color);border-radius:9px;padding:7px 12px;cursor:pointer;font-size:12px}.timer-choices button.selected{background:rgba(182,244,106,.14);border-color:var(--primary);color:var(--primary)}
+.tool-main-btn{border:0;background:var(--primary);color:#13201a;font-weight:800;border-radius:10px;padding:11px 15px;cursor:pointer;font-family:inherit}.tool-sub-btn{border:1px solid var(--border-color);background:rgba(255,255,255,.04);padding:11px 14px;color:var(--text-primary);border-radius:10px;cursor:pointer;margin-left:6px}
+.notes-card textarea{width:100%;resize:vertical;min-height:107px;background:rgba(4,14,18,.45);border:1px solid var(--border-color);border-radius:11px;padding:12px;color:var(--text-primary);font:13px/1.55 inherit;outline:0}.notes-card textarea:focus{border-color:var(--primary)}.notes-status{font-size:11px;color:var(--text-muted);margin-top:10px}
+.journey-number{display:flex;align-items:baseline;gap:12px;margin-top:25px}.journey-number span{font-size:41px;font-weight:850;color:var(--primary)}.journey-number small{font-size:12px;color:var(--text-secondary)}.journey-track{height:8px;background:rgba(255,255,255,.09);border-radius:10px;overflow:hidden;margin:9px 0 28px}.journey-track span{display:block;height:100%;width:0;background:var(--primary-gradient);transition:width .5s}
+.popup-container{max-width:940px;max-height:95vh;overflow:auto}.popup-body{padding:18px 22px 22px}.video-stage{width:100%;aspect-ratio:16/9;background:#080b0d;border-radius:14px;overflow:hidden;display:grid;place-items:center;color:var(--text-secondary);margin-bottom:14px}.video-stage iframe{display:block;width:100%;height:100%;border:0}.video-loading{display:grid;gap:8px;text-align:center}.video-loading i{font-size:45px;color:var(--primary)}.popup-body .popup-video-title{font-size:17px;margin-bottom:5px}.popup-body .popup-subtitle{font-size:12px;margin-bottom:16px}.popup-body .popup-actions{flex-direction:row;flex-wrap:wrap}.popup-body .popup-actions button{flex:1;min-width:165px;font-size:13px;padding:11px 12px}.popup-body .popup-actions .btn-popup-cerrar{flex:0;min-width:90px}
+body.light-mode{--bg-primary:#f3f7f5;--bg-secondary:#fff;--bg-card:#fff;--bg-card-hover:#f7faf8;--text-primary:#1d3036;--text-secondary:#536a73;--text-muted:#6f8087;--border-color:rgba(30,70,68,.12);--primary:#369669;--primary-dark:#257a50;--primary-light:#68b88e;--primary-gradient:linear-gradient(135deg,#68c58a,#69c5ad)}
+body.light-mode .nav-container{background:rgba(249,253,251,.95)}body.light-mode .welcome-panel,body.light-mode header{color:white}body.light-mode .welcome-panel .eyebrow{color:#bcfa9b}body.light-mode .welcome-primary,body.light-mode .tool-main-btn,body.light-mode .card .btn-play,body.light-mode .filter-btn.primary-btn{color:#0d2617}
+@media(max-width:980px){.tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.journey-card{grid-column:span 2}.stats-bar{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){header{padding:32px 16px 26px}header h1{font-size:47px}.welcome-panel{padding:25px;grid-template-columns:1fr;min-height:unset}.welcome-art{display:none}.welcome-copy h2{font-size:31px}.tools-grid{grid-template-columns:1fr}.journey-card{grid-column:auto}.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stats-bar .stat-item{min-height:82px;padding:11px;gap:8px}.stats-bar .stat-item i{height:34px;width:34px;font-size:15px}.stats-bar .stat-item .stat-value{font-size:19px}.tool-card{padding:19px}.popup-overlay{padding:6px}.popup-body{padding:13px}.popup-header{padding:10px}.popup-body .popup-actions{flex-direction:column}.popup-body .popup-actions button{min-width:unset;width:100%;flex:auto}.section-title{font-size:21px}}
+</style>
+
+<style id="premium-v6">
+:root{--accent:#b8f66b;--accent2:#52dfc1;--glow:rgba(184,246,107,.22)}
+body{background:radial-gradient(ellipse at 5% 5%,rgba(89,170,149,.13),transparent 45%),radial-gradient(ellipse at 95% 10%,var(--glow),transparent 35%),var(--bg-primary)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(120deg,transparent,rgba(255,255,255,.025),transparent);background-size:200% 200%;animation:ambientWave 14s ease-in-out infinite}
+@keyframes ambientWave{50%{background-position:100% 100%}}
+.nav-container,.planner-container,.studio-panel,.tool-card{backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.nav-menu button.activo,.btn-premium{background:linear-gradient(115deg,var(--accent),var(--accent2))!important;color:#07130f!important;border:0!important;font-weight:800}
+body[data-color="blue"]{--accent:#79baff;--accent2:#6be6f0;--glow:rgba(80,145,250,.2)}
+body[data-color="pink"]{--accent:#ff96cd;--accent2:#c4a2ff;--glow:rgba(255,110,182,.19)}
+body[data-color="amber"]{--accent:#ffc36e;--accent2:#ff8f70;--glow:rgba(255,170,65,.18)}
+body[data-color="green"]{--accent:#b8f66b;--accent2:#52dfc1;--glow:rgba(184,246,107,.2)}
+body{--primary:var(--accent);--primary-light:var(--accent2);--primary-gradient:linear-gradient(120deg,var(--accent),var(--accent2))}
+.studio-hub{max-width:1400px;margin:22px auto;padding:0 20px}.studio-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin:16px 0}.studio-heading h2{font-size:clamp(23px,3vw,33px);margin:0}.studio-muted{color:var(--text-secondary);font-size:13px}.studio-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}.tool-card{grid-column:span 4;background:linear-gradient(140deg,rgba(255,255,255,.065),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:20px;min-width:0}.tool-card.wide{grid-column:span 8}.tool-card.full{grid-column:1/-1}.tool-card h3{font-size:19px;margin:0 0 8px}.tool-card p{color:var(--text-secondary);font-size:13px;margin-bottom:12px}.studio-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.studio-btn,.studio-input,.studio-select{font:inherit;font-size:13px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.07);color:var(--text-primary);padding:10px 12px}.studio-btn{cursor:pointer;transition:.2s}.studio-btn:hover{border-color:var(--accent);transform:translateY(-1px)}.studio-btn[aria-pressed="true"]{background:var(--accent);color:#08120a}.studio-input{width:100%;min-width:0}.studio-select option{background:#18232b;color:#fff}.tool-card textarea{width:100%;min-height:85px;resize:vertical}.ring{width:128px;height:128px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--pct)*1%),rgba(255,255,255,.09) 0);margin:12px auto}.ring>span{display:grid;place-items:center;width:104px;height:104px;border-radius:50%;background:var(--bg-card);font-size:27px;font-weight:800}.route-list{display:grid;gap:9px}.route-step{border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:13px;background:rgba(255,255,255,.035)}.route-step summary{cursor:pointer;font-weight:750}.route-items{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.route-chip{border-radius:99px;border:1px solid rgba(255,255,255,.15);padding:8px 11px;background:rgba(255,255,255,.045);color:var(--text-primary);cursor:pointer;font-size:12px}.route-chip.done{border-color:var(--accent);color:var(--accent)}.achievement{font-size:12px;padding:10px 12px;background:rgba(255,255,255,.05);border-radius:10px;flex:1;min-width:130px}.achievement.locked{opacity:.43}.compact-card-actions{display:flex;gap:6px;margin-top:10px}.compact-card-actions .studio-btn{flex:1;padding:7px 4px;font-size:11px}.popup-container{max-width:960px}.popup-body{max-height:85vh;overflow:auto}.popup-body .video-stage{aspect-ratio:16/9}.focus-active header,.focus-active .stats-bar,.focus-active .controls-bar,.focus-active .filter-bar,.focus-active .studio-hub,.focus-active .planner-container{display:none!important}.focus-active .nav-menu{display:none!important}.focus-active .main-content{max-width:1100px}.focus-active .popup-overlay{display:flex}.focus-exit{position:fixed;top:15px;right:15px;z-index:10010;display:none}.focus-active .focus-exit{display:block}.modal-notes textarea{width:100%;min-height:110px}.progress-track{height:9px;border-radius:20px;background:rgba(255,255,255,.1);overflow:hidden}.progress-track>div{height:100%;background:var(--primary-gradient);width:0;transition:width .3s}.premium-hero-utility{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}.premium-hero-utility .studio-btn{font-weight:650}.studio-hidden{display:none!important}
+@media(max-width:1000px){.tool-card{grid-column:span 6}.tool-card.wide{grid-column:span 12}}@media(max-width:640px){.tool-card,.tool-card.wide{grid-column:span 12}.studio-hub{padding:0 12px}.studio-grid{gap:11px}.tool-card{padding:16px}.popup-body{padding:12px}.studio-heading h2{font-size:24px}.card .card-actions{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){body::before{animation:none!important}}
+</style>
+</head>
+<body>
+
+    <!-- ============================================
+    HEADER CON VERSÍCULO COMPLETO
+    ============================================ -->
+    <header>
+        <div class="hero-eyebrow"><i class="fas fa-headphones"></i> TU ESTUDIO MUSICAL PERSONAL</div>
+        <h1>Guitar<span>Studio.</span></h1>
+        <p class="subtitle">Aprende, practica y disfruta cada acorde. Todo en un solo lugar.</p>
+        <div class="versiculo">
+            <i class="fas fa-quote-left"></i>
+            <span class="versiculo-texto">
+                "Pero yo cantaré de tu poder, y alabaré de mañana tu misericordia;<br />
+                porque has sido mi amparo y refugio en el día de mi angustia.<br />
+                Fortaleza mía, a ti cantaré; porque eres, oh Dios, mi refugio, el Dios de mi misericordia."
+            </span>
+            <span class="versiculo-ref">— SALMO 59:16-17</span>
+        </div>
+        <button id="pwaInstall" hidden type="button" style="margin:18px auto 0; padding:12px 22px;border:1px solid #b6f46a;border-radius:999px;background:#b6f46a;color:#101823;font-weight:800;cursor:pointer;position:relative;z-index:4">📲 Instalar GuitarStudio</button>
+    </header>
+
+    <!-- ============================================
+    NAVEGACIÓN CON MENÚ DE INICIO
+    ============================================ -->
+    <div class="nav-container" id="navContainer">
+        <div class="nav-wrapper">
+            <a href="#" class="nav-logo" id="goHome">
+                <i class="fas fa-guitar"></i>
+                <span>Guitar<span style="color:var(--primary)">Studio</span></span>
+            </a>
+
+            <div class="nav-menu" id="navMenu">
+                <button class="activo" data-seccion="inicio">
+                    <i class="fas fa-home"></i> Inicio
+                    <span class="badge">🏠</span>
+                </button>
+                <button data-seccion="clases_cards">
+                    <i class="fas fa-guitar"></i> Javi
+                    <span class="badge" id="badge-clases_cards">0</span>
+                </button>
+                <button data-seccion="tercero_cards">
+                    <i class="fas fa-book-open"></i> Tercero
+                    <span class="badge" id="badge-tercero_cards">0</span>
+                </button>
+                <button data-seccion="fajardo">
+                    <i class="fas fa-music"></i> Fajardo
+                    <span class="badge" id="badge-fajardo">0</span>
+                </button>
+                <button data-seccion="Tutorial_javi_cards">
+                    <i class="fas fa-video"></i> Tutoriales
+                    <span class="badge" id="badge-Tutorial_javi_cards">0</span>
+                </button>
+                <button data-seccion="gaf_cards">
+                    <i class="fas fa-flag"></i> GAF
+                    <span class="badge" id="badge-gaf_cards">0</span>
+                </button>
+            </div>
+
+            <div class="nav-actions">
+                <button class="fav-btn" id="favToggle" title="Mostrar favoritos">
+                    <i class="fas fa-heart"></i>
+                    <span id="favCount">0</span>
+                </button>
+                <button id="themeToggle" title="Cambiar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+    CONTROLES
+    ============================================ -->
+    <div class="controls-bar">
+        <div class="control-hint"><i class="fas fa-info-circle"></i> Ajusta la velocidad desde el reproductor de YouTube.</div>
+
+        <div class="control-group">
+            <label><i class="fas fa-search-plus"></i> Zoom</label>
+            <div class="zoom-control">
+                <button id="zoomOut">−</button>
+                <span class="zoom-level" id="zoomLevel">100%</span>
+                <button id="zoomIn">+</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+    CONTENIDO PRINCIPAL
+    ============================================ -->
+    <div class="main-content" id="mainContent">
+        <!-- Estadísticas -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <i class="fas fa-video"></i>
+                <span>Total: <span class="stat-value" id="totalVideos">0</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-heart"></i>
+                <span>Favoritos: <span class="stat-value" id="totalFavs">0</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-eye"></i>
+                <span>Vistos: <span class="stat-value" id="totalVistos">0</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-fire"></i>
+                <span>Racha: <span class="stat-value" id="rachaDias">0</span> días</span>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filter-bar">
+            <div class="filter-left">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Buscar clase por título..." />
+            </div>
+            <div class="filter-right">
+                <button class="filter-btn" id="favFilterBtn"><i class="fas fa-heart"></i> Favoritos</button>
+                <button class="filter-btn primary-btn" id="resetFilterBtn"><i class="fas fa-undo"></i> Resetear</button>
+            </div>
+        </div>
+
+        <!-- ============================================
+        SECCIÓN INICIO - PLANIFICADOR DIARIO
+        ============================================ -->
+        <div id="inicio" class="seccion activa">
+            <section class="welcome-panel">
+                <div class="welcome-copy">
+                    <span class="eyebrow"><i class="fas fa-bolt"></i> TU VIAJE MUSICAL COMIENZA AQUÍ</span>
+                    <h2>Un acorde a la vez.<br><em>Una canción a la vez.</em></h2>
+                    <p>Tu biblioteca de clases, tus sesiones de práctica y tu progreso personal, en un espacio diseñado para inspirarte.</p>
+                    <div class="welcome-buttons">
+                        <button class="welcome-primary" id="startLearning"><i class="fas fa-play"></i> Explorar clases</button>
+                        <button class="welcome-secondary" id="jumpPractice"><i class="fas fa-calendar-check"></i> Plan de hoy</button>
+                    </div>
+                </div>
+                <div class="welcome-art" aria-hidden="true"><div class="glow-orbit"></div><i class="fas fa-guitar"></i><span class="art-tag">PRACTICA · APRENDE · CREA</span></div>
+            </section>
+            <section class="practice-tools" aria-label="Herramientas de práctica">
+                <div class="tool-heading"><div><span class="eyebrow">TU RUTINA</span><h3>Zona de práctica</h3></div><span class="tool-caption">Herramientas para concentrarte en tu música</span></div>
+                <div class="tools-grid">
+                    <div class="tool-card timer-card">
+                        <div class="tool-icon"><i class="fas fa-stopwatch"></i></div>
+                        <h4>Temporizador de práctica</h4><p>Dedica unos minutos a mejorar cada día.</p>
+                        <div class="timer-display" id="timerDisplay" aria-live="polite">15:00</div>
+                        <div class="timer-choices"><button data-minutes="5">5 min</button><button data-minutes="15" class="selected">15 min</button><button data-minutes="25">25 min</button></div>
+                        <button class="tool-main-btn" id="timerToggle"><i class="fas fa-play"></i> Iniciar sesión</button>
+                        <button class="tool-sub-btn" id="timerReset" aria-label="Reiniciar temporizador"><i class="fas fa-rotate-left"></i></button>
+                    </div>
+                    <div class="tool-card notes-card">
+                        <div class="tool-icon"><i class="fas fa-note-sticky"></i></div>
+                        <h4>Mis apuntes musicales</h4><p>Guarda acordes, ideas y recordatorios para tu próxima práctica.</p>
+                        <textarea id="practiceNotes" rows="4" placeholder="Ej.: Practicar cambio de Sol a Re, revisar rasgueos..."></textarea>
+                        <div class="notes-status" id="notesStatus"><i class="fas fa-shield-alt"></i> Guardado en este navegador</div>
+                    </div>
+                    <div class="tool-card journey-card">
+                        <div class="tool-icon"><i class="fas fa-chart-line"></i></div>
+                        <h4>Tu camino musical</h4><p>Continúa con tus clases y observa cuánto avanzas.</p>
+                        <div class="journey-number"><span id="journeyPercent">0%</span><small>de clases abiertas</small></div>
+                        <div class="journey-track"><span id="journeyFill"></span></div>
+                        <button class="tool-main-btn" id="continueLearning"><i class="fas fa-arrow-right"></i> Seguir aprendiendo</button>
+                    </div>
+                </div>
+            </section>
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="icon">📋</span> Plan Diario de Estudio
+                    <span class="count" id="count-tareas">0 tareas</span>
+                </div>
+            </div>
+
+            <!-- Planificador -->
+            <div class="planner-container">
+                <div class="planner-header">
+                    <div class="planner-title">
+                        <i class="fas fa-calendar-day"></i>
+                        Plan de Hoy
+                    </div>
+                    <div class="planner-date" id="fechaActual">
+                        <i class="far fa-calendar-alt"></i>
+                        <span id="fechaTexto"></span>
+                    </div>
+                    <div class="planner-progress">
+                        <span class="progress-text" id="progressText">0%</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de tareas -->
+                <div class="task-list" id="taskList">
+                    <!-- Las tareas se renderizan con JavaScript -->
+                </div>
+
+                <!-- Formulario para añadir tarea -->
+                <div class="task-form" id="taskForm">
+                    <input type="text" class="task-input-text" id="taskInput" placeholder="📝 Descripción de la tarea..." />
+                    <input type="time" class="task-input-hora" id="taskHora" value="09:00" />
+                    <select class="task-input-categoria" id="taskCategoria">
+                        <option value="calentamiento">🔥 Calentamiento</option>
+                        <option value="principal" selected>🎯 Principal</option>
+                        <option value="extra">📌 Extra</option>
+                        <option value="teoria">📖 Teoría</option>
+                    </select>
+                    <button class="btn-add-task" id="btnAddTask">
+                        <i class="fas fa-plus"></i> Añadir
+                    </button>
+                </div>
+            </div>
+
+            <!-- Consejos de estudio -->
+            <div style="background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border-color); padding: 20px; margin-top: 20px;">
+                <h3 style="color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-lightbulb"></i> Consejo del Día
+                </h3>
+                <p style="color: var(--text-secondary); line-height: 1.8;" id="consejoDia">
+                    "La práctica constante es la clave del éxito. Dedica al menos 15 minutos diarios a calentar antes de tus sesiones de estudio."
+                </p>
+            </div>
+        </div>
+
+        <!-- ============================================
+        SECCIONES DE CLASES
+        ============================================ -->
+        <div id="clases_cards" class="seccion">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="icon">📘</span> Clases Javi
+                    <span class="count" id="count-clases_cards">0 videos</span>
+                </div>
+            </div>
+            <div class="grid" data-section="clases_cards"></div>
+        </div>
+
+        <div id="tercero_cards" class="seccion">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="icon">📚</span> A. Tercero
+                    <span class="count" id="count-tercero_cards">0 videos</span>
+                </div>
+            </div>
+            <div class="grid" data-section="tercero_cards"></div>
+        </div>
+
+        <div id="fajardo" class="seccion">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="icon">🎵</span> Fajardo
+                    <span class="count" id="count-fajardo">0 videos</span>
+                </div>
+            </div>
+            <div class="grid" data-section="fajardo"></div>
+        </div>
+
+        <div id="Tutorial_javi_cards" class="seccion">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="icon">🎥</span> Tutoriales Javi
+                    <span class="count" id="count-Tutorial_javi_cards">0 videos</span>
+                </div>
+            </div>
+            <div class="grid" data-section="Tutorial_javi_cards"></div>
+        </div>
+
+        <div id="gaf_cards" class="seccion">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="icon">💂</span> GAF
+                    <span class="count" id="count-gaf_cards">0 videos</span>
+                </div>
+            </div>
+            <div class="grid" data-section="gaf_cards"></div>
+        </div>
+    </div>
+
+    <!-- ============================================
+    MODAL DE EDICIÓN DE TAREA
+    ============================================ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title">✏️ Editar Tarea</span>
+                <button class="btn-close-modal" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-form-group">
+                    <label>Descripción</label>
+                    <input type="text" id="modalTaskText" placeholder="Descripción de la tarea..." />
+                </div>
+                <div class="modal-form-group">
+                    <label>Hora</label>
+                    <input type="time" id="modalTaskHora" />
+                </div>
+                <div class="modal-form-group">
+                    <label>Categoría</label>
+                    <select id="modalTaskCategoria">
+                        <option value="calentamiento">🔥 Calentamiento</option>
+                        <option value="principal">🎯 Principal</option>
+                        <option value="extra">📌 Extra</option>
+                        <option value="teoria">📖 Teoría</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-modal-save" id="modalSaveBtn">💾 Guardar</button>
+                    <button class="btn-modal-cancel" id="modalCancelBtn">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+    VENTANA EMERGENTE DE REPRODUCCIÓN
+    ============================================ -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-container">
+            <div class="popup-header">
+                <span class="popup-title" id="popupTitle">🎸 Reproducir video</span>
+                <button class="btn-close-popup" id="closePopup">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="popup-body">
+                <div class="video-stage" id="videoStage"><div class="video-loading"><i class="fas fa-play-circle"></i><span>Elige una clase para comenzar</span></div></div>
+                <div class="popup-video-title" id="popupVideoTitle">Clase de Guitarra</div>
+                <div class="popup-subtitle">
+                    <i class="fas fa-exclamation-circle" style="color: var(--primary);"></i>
+                    Reproduce tu clase aquí. Si el autor restringió la inserción, puedes abrirla en YouTube.
+                </div>
+                <div class="popup-actions">
+                    <button class="btn-abrir-youtube" id="popupOpenYouTube">
+                        <i class="fab fa-youtube"></i> Abrir en YouTube
+                    </button>
+                    <button class="btn-popup-fav" id="popupFavBtn">
+                        <i class="fas fa-heart"></i> Añadir a favoritos
+                    </button>
+                    <button class="btn-popup-cerrar" id="popupCerrarBtn">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+    BOTÓN DE SUBIR
+    ============================================ -->
+    <button class="btn-scroll-top" id="scrollTopBtn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- ============================================
+    NOTIFICACIONES
+    ============================================ -->
+    <div class="toast-container" id="toastContainer"></div>
+
+
+<section class="studio-hub" id="premiumStudio">
+ <div class="studio-heading"><div><h2>🎸 Tu estudio musical</h2><div class="studio-muted">Practica, aprende y organiza tu camino a tu ritmo.</div></div><div class="studio-row"><button class="studio-btn" id="focusBtn">🌊 Modo enfoque</button><label class="studio-muted" for="colorTheme">Tema</label><select class="studio-select" id="colorTheme"><option value="green">🍃 Verde</option><option value="blue">💎 Azul</option><option value="pink">🌸 Rosa</option><option value="amber">🌅 Ámbar</option></select></div></div>
+ <div class="studio-grid">
+ <div class="tool-card wide"><h3>🧭 Ruta de aprendizaje sugerida</h3><p>Un orden recomendado a partir de los títulos de tus clases. No es obligatorio: mezcla cursos y avanza a tu ritmo.</p><div class="route-list" id="learningRoute"></div></div>
+ <div class="tool-card"><h3>📊 Tu progreso</h3><div class="ring" id="studioRing" style="--pct:0"><span id="studioPercent">0%</span></div><p id="studioProgressCaption" style="text-align:center"></p><div class="progress-track"><div id="studioProgressTrack"></div></div><h3 style="margin-top:16px">🔥 Logros</h3><div class="studio-row" id="achievements"></div></div>
+ <div class="tool-card"><h3>🥁 Metrónomo</h3><p>Pulso constante para practicar ritmo</p><div class="studio-row"><label for="bpmControl">BPM</label><input id="bpmControl" class="studio-input" style="width:92px" type="number" min="30" max="240" value="80"><select id="meterControl" class="studio-select" aria-label="Compás"><option value="4">4/4</option><option value="3">3/4</option><option value="2">2/4</option><option value="6">6/8 (6 pulsos)</option></select></div><div style="font-size:36px;font-weight:800;text-align:center;margin:12px" id="beatDisplay">1 · 2 · 3 · 4</div><div class="studio-row"><button id="metronomeToggle" class="studio-btn btn-premium">▶ Iniciar</button><button id="tapTempo" class="studio-btn">Tap tempo</button></div></div>
+ <div class="tool-card"><h3>🎹 Afinación de referencia</h3><p>Selecciona una cuerda y afina de oído. Reproduce tonos, no detecta automáticamente el micrófono.</p><div class="studio-row" id="tuningButtons"></div><p id="toneLabel">Afinación estándar E A D G B E</p><button class="studio-btn" id="stopTone">■ Detener tono</button></div>
+ <div class="tool-card"><h3>⏱️ Pomodoro musical</h3><p>Alterna estudio y descanso. Pausa si lo necesitas.</p><div id="pomodoroDisplay" style="font-size:44px;font-weight:850;letter-spacing:2px">25:00</div><p id="pomodoroMode">Tiempo de práctica</p><div class="studio-row"><button class="studio-btn" data-pomo="25">25 min</button><button class="studio-btn" data-pomo="15">15 min</button><button class="studio-btn" data-pomo="5">5 min</button><button class="studio-btn" data-pomo="break">Descanso</button></div><div class="studio-row" style="margin-top:10px"><button class="studio-btn btn-premium" id="pomoToggle">▶ Iniciar</button><button class="studio-btn" id="pomoReset">↺ Reiniciar</button></div></div>
+ <div class="tool-card wide"><h3>🔍 Biblioteca completa</h3><p>Busca entre todas las secciones sin cambiar de curso. Abre, añade a cola o usa Chordify.</p><input class="studio-input" id="globalSearch" placeholder="Buscar clases por tema o nombre de curso..." aria-label="Buscar en todas las clases"><div class="route-items" id="globalResults"></div></div>
+ <div class="tool-card"><h3>🎵 Cola personal</h3><p>Organiza qué clases ver a continuación.</p><div id="playQueue" class="route-list"></div><button id="clearQueue" class="studio-btn" style="margin-top:10px">Vaciar cola</button></div>
+ <div class="tool-card wide"><h3>💾 Respaldo de tu progreso</h3><p>Exporta favoritos, tareas, notas, cola y progreso en un archivo JSON. Para recuperar, importa ese archivo.</p><div class="studio-row"><button id="exportData" class="studio-btn btn-premium">↓ Exportar datos</button><label class="studio-btn" for="importData">↑ Importar datos</label><input id="importData" type="file" accept="application/json,.json" class="studio-hidden"></div><p style="margin-top:10px">Tu información permanece en este navegador, salvo que la exportes.</p></div>
+ <div class="tool-card"><h3>⌨️ Atajos</h3><p><b>Ctrl + K</b> Buscar · <b>F</b> Favoritos · <b>1–6</b> Cursos · <b>Esc</b> Cerrar · <b>Alt + M</b> Metrónomo · <b>Alt + P</b> Pomodoro · <b>Alt + E</b> Enfoque.</p></div>
+ </div>
+</section>
+<button id="focusExit" class="studio-btn focus-exit">Salir del modo enfoque (Esc)</button>
+<div class="modal-overlay" id="classNotesModal" role="dialog" aria-modal="true" aria-label="Notas de la clase"><div class="modal-container"><div class="modal-header"><strong id="classNotesTitle">Notas por clase</strong><button class="studio-btn" id="classNotesClose">✕</button></div><div class="modal-body modal-notes"><p class="studio-muted">Las notas se guardan automáticamente en este navegador.</p><textarea id="classNotesText" class="studio-input" placeholder="Acordes, ejercicios, dudas, observaciones..."></textarea><div class="studio-row" style="margin-top:12px"><button class="studio-btn btn-premium" id="classNotesSave">Guardar notas</button></div></div></div></div>
+
+    <!-- ============================================
+    JAVASCRIPT COMPLETO
+    ============================================ -->
+    <script>
+        // ============================================
+        // DATOS DE CLASES
+        // ============================================
+        const DATA = {
+            clases_cards: [
+                { titulo: 'INTRODUCCIÓN A CLASES VISTAZO', url: 'https://www.youtube.com/watch?v=iTfJbXahw0Y' },
+                { titulo: 'Clase 0: Rutina de estudio', url: 'https://www.youtube.com/watch?v=XhMYr48I24E' },
+                { titulo: 'Clase 0.1: ¿Cuánto debo estudiar la guitarra?', url: 'https://www.youtube.com/watch?v=jCxmS3v5YA8' },
+                { titulo: 'Clase 1: Cuerdas', url: 'https://www.youtube.com/watch?v=2NONnID9niI' },
+                { titulo: 'Clase 1.1: ¿Cuándo cambiar las cuerdas?', url: 'https://www.youtube.com/watch?v=iZthToM8mwI' },
+                { titulo: 'Clase 2: Colocar cuerdas', url: 'https://www.youtube.com/watch?v=ZMESyIjRHp4' },
+                { titulo: 'Clase 2.2: Cambio cuerdas de nylon', url: 'https://www.youtube.com/watch?v=1VmFuJ4qPVc' },
+                { titulo: 'Clase 3: Calentamiento', url: 'https://www.youtube.com/watch?v=iYIOHm4lbXE' },
+                { titulo: 'Clase 3.1: Rutina de Calentamiento', url: 'https://www.youtube.com/watch?v=s2LqG9U-bqw' },
+                { titulo: 'Clase 4: Amp de tubos', url: 'https://www.youtube.com/watch?v=dc5FDQbjpyE' },
+                { titulo: 'Clase 5: Hidratación del mástil', url: 'https://www.youtube.com/watch?v=Aea-_rH3D_c' },
+                { titulo: 'Clase 6: Numeración de dedos', url: 'https://www.youtube.com/watch?v=o3zbtdPx4vk' },
+                { titulo: 'Clase 6.1: Artículos para la guitarra', url: 'https://www.youtube.com/watch?v=3gV-BwWYPCw' },
+                { titulo: 'Clase 7: Ejercicio para mejorar la posición', url: 'https://www.youtube.com/watch?v=WVpCFN9Y47I' },
+                { titulo: 'Clase 8: Partes de la guitarra', url: 'https://www.youtube.com/watch?v=ImET8a3ireA' },
+                { titulo: 'Clase 9: Función de notas en el diapasón', url: 'https://www.youtube.com/watch?v=Kl0NcWn9D8M' },
+                { titulo: 'Clase 10: Función de notas en el diapasón', url: 'https://www.youtube.com/watch?v=Z6D6WGj3ENk' },
+                { titulo: 'Clase 10.1: Mantenimiento de guitarra', url: 'https://www.youtube.com/watch?v=wVXVZffacOM' },
+                { titulo: 'Clase 10.2: Construcción de cables', url: 'https://www.youtube.com/watch?v=8dVbLH_KAAE' },
+                { titulo: 'Clase 11: Secreto de encontrar notas en el diapasón', url: 'https://www.youtube.com/watch?v=dxb7-2rRAU0' },
+                { titulo: 'Clase 12: Bemoles y sostenidos', url: 'https://www.youtube.com/watch?v=ofu2HCn-a7w' },
+                { titulo: 'Clase 13: Alfabeto musical', url: 'https://www.youtube.com/watch?v=gh-1xI5sxt8' },
+                { titulo: 'Clase 14: Tonos y semitonos', url: 'https://www.youtube.com/watch?v=mqnA8vSq1Rk' },
+                { titulo: 'Clase 15: Escala mayor', url: 'https://www.youtube.com/watch?v=uJ0Ti2le6l8' },
+                { titulo: 'Clase 16: Ejercicio de motricidad', url: 'https://www.youtube.com/watch?v=Z3w9Mds5obs' },
+                { titulo: 'Clase 17: Lugar secreto de la mano derecha P1', url: 'https://www.youtube.com/watch?v=bUU4vJnW_sQ' },
+                { titulo: 'Clase 17.1: Lugar secreto de la mano derecha P2', url: 'https://www.youtube.com/watch?v=8bI9d358SgU' },
+                { titulo: 'Clase 18: 3 posiciones de la escala mayor', url: 'https://www.youtube.com/watch?v=IRgLEdFVkWE' },
+                { titulo: 'Clase 19: Afinador al oído', url: 'https://www.youtube.com/watch?v=OL6cUGP2phI' },
+                { titulo: 'Clase 20: Técnica de mute', url: 'https://www.youtube.com/watch?v=6A8CZPMjBOs' },
+                { titulo: 'Clase 21: Ejercicios de 3 posiciones escala mayor', url: 'https://www.youtube.com/watch?v=yt8HlgS7_2s' },
+                { titulo: 'Clase 22: Escala mayor V2', url: 'https://www.youtube.com/watch?v=tlY8lf21tNg' },
+                { titulo: 'Clase 23: El pick del mago', url: 'https://www.youtube.com/watch?v=EPAcWNyskpI' },
+                { titulo: 'Clase 24: Técnica de mute', url: 'https://www.youtube.com/watch?v=i7srfqWF8pY' },
+                { titulo: 'Clase 25: Notas claras y sustain', url: 'https://www.youtube.com/watch?v=mJBVvHVtlew' },
+                { titulo: 'Clase 26: Improvisación 1', url: 'https://www.youtube.com/watch?v=LfUQ75cl4Bk' },
+                { titulo: 'Clase 27: Afinadores', url: 'https://www.youtube.com/watch?v=l4CUcmFbsz8' },
+                { titulo: 'Clase 28: Púa alternada P1', url: 'https://www.youtube.com/watch?v=R9f5ubA16OQ' },
+                { titulo: 'Clase 29: Púa alternada P2', url: 'https://www.youtube.com/watch?v=P3jm1eMjg9o' },
+                { titulo: 'Clase 30: Power chord', url: 'https://www.youtube.com/watch?v=CWqnJi5QOSg' },
+                { titulo: 'Clase 31: Rutina de calentamiento 2', url: 'https://www.youtube.com/watch?v=BnMP8Ap-hZg' },
+                { titulo: 'Clase 32: Círculo de quintas pt1', url: 'https://www.youtube.com/watch?v=X7FKl9eMngU' },
+                { titulo: 'Clase 32: Círculo de quintas pt2', url: 'https://www.youtube.com/watch?v=UdZBOJ5WaPM' },
+                { titulo: 'Clase 33: Acompañamiento en Ministración', url: 'https://www.youtube.com/watch?v=-TIHIJZQuO0' },
+                { titulo: 'Clase 33.1: Guitarra acústica en Ministración', url: 'https://www.youtube.com/watch?v=OwahVwpLBfs' },
+                { titulo: 'Clase 33.2: 5 Posiciones clave', url: 'https://www.youtube.com/watch?v=vnnV355p5jw' },
+                { titulo: 'Clase 34: Souchek prueba de sonido P1', url: 'https://www.youtube.com/watch?v=iwesgAZqpZU' },
+                { titulo: 'Clase 34: Souchek prueba de sonido P2', url: 'https://www.youtube.com/watch?v=4xEIBDh2Hec' },
+                { titulo: 'Clase 35: Mi# y Si#', url: 'https://www.youtube.com/watch?v=5dZZ08I87-0' },
+                { titulo: 'Clase 36: Improvisación 2', url: 'https://www.youtube.com/watch?v=59j_On1HK98' },
+                { titulo: 'Clase 37: Checklist para ensayo', url: 'https://www.youtube.com/watch?v=m28tB1I035w' },
+                { titulo: 'Clase 37.1: Ajustar monitoreo', url: 'https://www.youtube.com/watch?v=--X1OuB7qYA' },
+                { titulo: 'Clase 38: Improvisación 3', url: 'https://www.youtube.com/watch?v=hcvtgQFVITA' },
+                { titulo: 'Clase 39: Intervalos 1', url: 'https://www.youtube.com/watch?v=pDa7hhuIaqE' },
+                { titulo: 'Clase 40: Técnica de BENDING 1', url: 'https://www.youtube.com/watch?v=NN9Ja8Yhk3I' },
+                { titulo: 'Clase 41: BENDING 2', url: 'https://www.youtube.com/watch?v=VpzJSemKtX8' },
+                { titulo: 'Clase 42: Grabarte de forma remota', url: 'https://www.youtube.com/watch?v=8_QbbjUL_6g' },
+                { titulo: 'Clase 43: Qué es el FX loop', url: 'https://www.youtube.com/watch?v=qH-EfrKAVM4' },
+                { titulo: 'Clase 44: Intervalos 2', url: 'https://www.youtube.com/watch?v=uoa-3UCb_-8' },
+                { titulo: 'Clase 45: BENDING 3', url: 'https://www.youtube.com/watch?v=oe92ECch4WA' },
+                { titulo: 'Clase 46: Errores en transiciones', url: 'https://www.youtube.com/watch?v=yMNK-grfzjk' },
+                { titulo: 'Clase 47: Ejercicios 3° 4° 5°', url: 'https://www.youtube.com/watch?v=4I0d6opdO14' },
+                { titulo: 'Clase 48: Ejercicios 6° 7° 8°', url: 'https://www.youtube.com/watch?v=A2D1Clqp57o' },
+                { titulo: 'Clase 49: Tip Relativa', url: 'https://www.youtube.com/watch?v=5g-Nwfd9UNI' },
+                { titulo: 'Clase 50: Tip Dedo Pulgar', url: 'https://www.youtube.com/watch?v=6QjCmla2n-w' },
+                { titulo: 'Clase 51: BENDING 4', url: 'https://www.youtube.com/watch?v=qR99ayNH-UA' },
+                { titulo: 'Clase 52: Agrandar tu sonido', url: 'https://www.youtube.com/watch?v=0lZ8q3tk528' },
+                { titulo: 'Clase 53: Intervalos de oído', url: 'https://www.youtube.com/watch?v=8iVtZ2bOEdk' },
+                { titulo: 'Clase 54: Elegir pick ideal', url: 'https://www.youtube.com/watch?v=YQmXHSz1kIw' },
+                { titulo: 'Clase 55: BENDING 5', url: 'https://www.youtube.com/watch?v=LCqwOVbm3cY' },
+                { titulo: 'Clase 56: Tip de uñas acústica', url: 'https://www.youtube.com/watch?v=ONhphFG8Mo0' },
+                { titulo: 'Clase 57: Dominio del diapasón', url: 'https://www.youtube.com/watch?v=YyizXF-Cnew' },
+                { titulo: 'Clase 58: BENDING 6', url: 'https://www.youtube.com/watch?v=RiSAyiSBPro' },
+                { titulo: 'Clase 59: Dominio del diapasón final', url: 'https://www.youtube.com/watch?v=Z5BvAlzXG-A' },
+                { titulo: 'Clase 60: La importancia del quemado', url: 'https://www.youtube.com/watch?v=TzCZ9iAr_8E' },
+                { titulo: 'Clase 61: BENDING 7', url: 'https://www.youtube.com/watch?v=PudtxENU8aY' },
+                { titulo: 'Clase 62: Slapping Thump', url: 'https://www.youtube.com/watch?v=WmVjVdhvXpE' },
+                { titulo: 'Clase 63: Bajo continuo', url: 'https://www.youtube.com/watch?v=fjV_p_tpcoM' },
+                { titulo: 'Clase 64: Intervalos escala mayor', url: 'https://www.youtube.com/watch?v=9hvuoL_LMBs' },
+                { titulo: 'Clase 65: Intervalos melódicos y armónicos', url: 'https://www.youtube.com/watch?v=5xJ_wlDHRUc' },
+                { titulo: 'Clase 66: Eliminar armónicos no deseados', url: 'https://www.youtube.com/watch?v=jCUvmgSRGmw' },
+                { titulo: 'Clase 67: Acordes', url: 'https://www.youtube.com/watch?v=7NzAWOvXGIg' },
+                { titulo: 'Clase 68: Desconstruyendo acordes', url: 'https://www.youtube.com/watch?v=7k7Sbb-oadE' },
+                { titulo: 'Clase 69: El estuche ideal', url: 'https://www.youtube.com/watch?v=8I9k6NggTNk' },
+                { titulo: 'FINAL', url: 'https://www.youtube.com/watch?v=QBImZPvxM8U' }
+            ],
+            tercero_cards: [
+                { titulo: 'INTRODUCCIÓN GMAIL', url: 'https://www.youtube.com/watch?v=Iokitsk_2qI' },
+                { titulo: 'Conceptos básicos', url: 'https://www.youtube.com/watch?v=fsljnbl9q9Q' },
+                { titulo: 'Figuras Rítmicas', url: 'https://www.youtube.com/watch?v=EIBlzVhaKh8' },
+                { titulo: 'Intervalos y Escala Cromática', url: 'https://www.youtube.com/watch?v=6mMcn7BLNic' },
+                { titulo: 'CLASE 1 GMAIL', url: 'https://www.youtube.com/watch?v=PCseBGdzD7Q' },
+                { titulo: 'CLASE 2', url: 'https://www.youtube.com/watch?v=CzMz7JDUG_s' },
+                { titulo: 'CLASE 3', url: 'https://www.youtube.com/watch?v=GsMwreZCjKk' },
+                { titulo: 'CLASE 4', url: 'https://www.youtube.com/watch?v=2yy0Go2jV48' },
+                { titulo: 'CLASE 5', url: 'https://www.youtube.com/watch?v=9yY2jICvxgM' },
+                { titulo: 'CLASE 6', url: 'https://www.youtube.com/watch?v=m6mNEGsxTsg' },
+                { titulo: 'CLASE 7: Memorizar notas', url: 'https://www.youtube.com/watch?v=kGhnwF9E3lY' },
+                { titulo: 'CLASE 8: Escala Pentatónica', url: 'https://www.youtube.com/watch?v=C6l8svRqas8' },
+                { titulo: 'CLASE 9: Pentatónica menor', url: 'https://drive.google.com/file/d/1BrjpZy6JgnboiVZSVoDlJX2UHlw7Pung/view?usp=drivesdk' },
+                { titulo: 'CLASE TRIDAS / ROBERTO RADO', url: 'https://www.youtube.com/watch?v=pnXRP_CWGBw' },
+                { titulo: 'CLASE IMPROVISACIÓN / ROBERTO RADO', url: 'https://www.youtube.com/watch?v=EzdzpwOHot8' },
+                { titulo: 'Aplicaciones Escala Mayor (improvisación)', url: 'https://www.youtube.com/watch?v=GcIYh2Uyfk8' },
+                { titulo: 'Rey Vencedor Cover!!', url: 'https://www.youtube.com/watch?v=VGUJpY9ePkI' },
+                { titulo: 'Fiesta y Viene Ya (cover)', url: 'https://www.youtube.com/watch?v=o55YaNKuvW4' },
+                { titulo: 'Eres Dios (Solo - Alejandro Tercero)', url: 'https://www.youtube.com/watch?v=c-QZjIqjvpM' },
+                { titulo: 'Tutorial Alegría Guitarra', url: 'https://www.youtube.com/watch?v=tayJsjz3mqQ' },
+                { titulo: 'Coritos Miel San Marcos (Guitarra Cover) Pt1', url: 'https://www.youtube.com/watch?v=wzPpzLVshHk' },
+                { titulo: 'Llegar a Ti (Guitar Cover) Jose Arguera.', url: 'https://www.youtube.com/watch?v=aYbbMZvG-YU' },
+                { titulo: 'El es el Poderoso de Israel, Eres Todo Poderoso (Miel san Marcos) Guitar Cover', url: 'https://www.youtube.com/watch?v=vxDR9xKlf-A' },
+                { titulo: 'Grande y Fuerte (Guitar Cover) Miel San Marcos', url: 'https://www.youtube.com/watch?v=ciepZuNrRQY' },
+                { titulo: 'Abre los Cielos (Guitar Cover) Redimi2 y Miel San Marcos', url: 'https://www.youtube.com/watch?v=H2Ep09dWtaY' },
+                { titulo: 'Danzo en el Rio (guitar cover) Miel San Marcos', url: 'https://www.youtube.com/watch?v=nnLYUt4U_OM' },
+                { titulo: 'Agradecido (guitar cover) Miel San Marcos', url: 'https://www.youtube.com/watch?v=l-kWaqbDzRM' },
+                { titulo: 'Los muros caerán Guitar Cover', url: 'https://www.youtube.com/watch?v=538S0IJVeVI' },
+                { titulo: 'No Callare (guitar cover) Miel San Marcos', url: 'https://www.youtube.com/watch?v=HFdK49Ywt6E' },
+                { titulo: 'LLEGO EL TIEMPO (Miel san marcos)', url: 'https://www.youtube.com/watch?v=Q3GAvhGkUdw' },
+                { titulo: 'Cristo No esta Muerto (Guitar Cover) Miel San Marcos', url: 'https://www.youtube.com/watch?v=zgopCAU3rUw' },
+                { titulo: 'Clama kike pavon Cover!!', url: 'https://www.youtube.com/watch?v=lO_EaNDUoRo' },
+                { titulo: 'Clases Guitarras Custom Alejandro Tercero (Mixolidio)', url: 'https://youtu.be/A4kztDvUBgE?si=EPeM-0dzU4rscL3L' },
+
+                { titulo: 'Cómo usar el Capotraste', url: 'https://www.youtube.com/watch?v=NjJWW1b5zyI' }
+                
+            ],
+
+            fajardo: [
+                { titulo: 'Mis Solos de Guitarra Favoritos', url: 'https://www.youtube.com/watch?v=Ylpov6IF10M' },
+                { titulo: '5 Técnicas Que Debes Aprender Para Ser Mejor Guitarrista', url: 'https://www.youtube.com/watch?v=Btutj6m-Nds' },
+                { titulo: 'Las 5 posiciones de la escala pentatónica', url: 'https://www.youtube.com/watch?v=HrekOlqjXlo' },
+                { titulo: 'Practicando Dos Ejercicios', url: 'https://www.youtube.com/watch?v=nrqiJMazz_k' },
+                { titulo: 'Escalas Mayores y Menores', url: 'https://www.youtube.com/watch?v=RUOAFaii6rk' },
+                { titulo: 'Legato', url: 'https://www.youtube.com/watch?v=uH3NubBsyxk' },
+                { titulo: 'Velocidad Economy Picking', url: 'https://www.youtube.com/watch?v=FagLFxWH2yg' },
+                { titulo: '3 Arpegios para tocar en cualquier canción', url: 'https://www.youtube.com/watch?v=mHaM1g-Au90' },
+                { titulo: 'Aprende a tocar en Mi Mayor', url: 'https://www.youtube.com/watch?v=LDVaY04pruA' },
+                { titulo: 'Ejercicio para desarrollar velocidad #2', url: 'https://www.youtube.com/watch?v=0-5YvM60XsU' },
+                { titulo: 'Tonalidad de Mi Mayor + Nashville Number System', url: 'https://www.youtube.com/watch?v=uZkV8plNTaU' }
+            ],
+            Tutorial_javi_cards: [
+                { titulo: 'TUTORIAL SUAVE VOZ DETALLE', url: 'https://www.youtube.com/watch?v=L7DEjcgDxZo' },
+                { titulo: 'TUTORIAL SUAVE VOZ NORMAL', url: 'https://www.youtube.com/watch?v=Dv9vraV8Ncg' },
+                { titulo: 'Desconstruyendo solo Noviembre DETALLE', url: 'https://www.youtube.com/watch?v=Dv9vraV8Ncg' },
+                { titulo: 'Vives tu vivo yo P1 DETALLE', url: 'https://www.youtube.com/watch?v=wuFStvJAU3A' },
+                { titulo: 'Vives tu vivo yo P1 DETALLE (2)', url: 'https://www.youtube.com/watch?v=KNVgCPPNxt8' },
+                { titulo: 'Vives tu vivo yo NORMAL', url: 'https://www.youtube.com/watch?v=bW4C98SSaeg' },
+                { titulo: 'Vives tu vivo CAM', url: 'https://www.youtube.com/watch?v=nBlJnsvaeyo' },
+                { titulo: 'SOMOS P1 DETALLE', url: 'https://www.youtube.com/watch?v=kz6RtN-RuPo' },
+                { titulo: 'SOMOS P2 DETALLE', url: 'https://www.youtube.com/watch?v=yP5fDBpdTpY' },
+                { titulo: 'SOMOS NORMAL', url: 'https://www.youtube.com/watch?v=6_a38AyYVXc' },
+                { titulo: 'Conocerte Más P1', url: 'https://www.youtube.com/watch?v=1tnww7g9s-I' },
+                { titulo: 'Conocerte Más P2', url: 'https://www.youtube.com/watch?v=OOFB2Fb5Woc' },
+                { titulo: 'Conocerte Más NORMAL', url: 'https://www.youtube.com/watch?v=Dmru3K9-krs' },
+                { titulo: 'ANÁLISIS DERROCHE DE AMOR (CAM)', url: 'https://www.youtube.com/watch?v=Z1wq-g8l_S0' },
+                { titulo: 'DERROCHE DE AMOR NORMAL', url: 'https://www.youtube.com/watch?v=y2znouNCxbU' },
+                { titulo: 'DERROCHE DE AMOR DETALLE', url: 'https://www.youtube.com/watch?v=4fv_SEl1rfg' },
+                { titulo: 'Derroche de amor Lakewod (Guitar Cam)', url: 'https://www.youtube.com/watch?v=AWzxfREwicc' },
+                { titulo: 'Desconstruyendo Noche de Paz', url: 'https://www.youtube.com/watch?v=ZJtZdZC7LWM' },
+                { titulo: 'SOPLA P1', url: 'https://www.youtube.com/watch?v=asLgY9ZNHjQ' },
+                { titulo: 'SOPLA P2', url: 'https://www.youtube.com/watch?v=dCxH7aNs7mg' },
+                { titulo: 'Si estoy contigo', url: 'https://www.youtube.com/watch?v=U_Q_4aSadJo' },
+                { titulo: 'Es el amor', url: 'https://www.youtube.com/watch?v=WyiI-p0cHzw' },
+                { titulo: 'Llora el mundo y llora Dios', url: 'https://www.youtube.com/watch?v=8i1JYTYfts0' }
+            ],
+            gaf_cards: [
+                { titulo: 'Tutorial DEJAME Alabar', url: 'https://www.youtube.com/watch?v=AwAjAIKz2F8' },
+                { titulo: 'Tutorial Mi Dios Todopoderoso', url: 'https://www.youtube.com/watch?v=9hqAPsAviYY' },
+                { titulo: 'Padre Dios p1', url: 'https://www.youtube.com/watch?v=6TXkyInYvfk' },
+                { titulo: 'Padre Dios p2', url: 'https://www.youtube.com/watch?v=hKbsT71dKCo' },
+                { titulo: 'TE NECESITO', url: 'https://www.youtube.com/watch?v=vrAaO66Kz64' },
+                { titulo: 'Yo he nacido p1', url: 'https://www.youtube.com/watch?v=b3j7h1I6pQc' },
+                { titulo: 'Yo he nacido p2', url: 'https://www.youtube.com/watch?v=dxCfn-TGpQU' },
+                { titulo: 'TE AMO P1', url: 'https://www.youtube.com/watch?v=LZU49lQPRwE' },
+                { titulo: 'TE AMO P2', url: 'https://www.youtube.com/watch?v=uXvCWIYm5Y8' },
+                { titulo: 'JESÚS ERES MI REY', url: 'https://www.youtube.com/watch?v=m3E-uwCP2Ko' },
+                { titulo: 'JESÚS ERES MI REY / CON TODAS MIS FUERZAS', url: 'https://www.youtube.com/watch?v=1wFPNiBXuRM' },
+                { titulo: 'Sol detente (Kiko Cibrian)', url: 'https://www.youtube.com/watch?v=QCABRkIla2s' },
+                { titulo: 'Al que es digno (NORMAL)', url: 'https://www.youtube.com/watch?v=YrzyJxzw6nw' },
+                { titulo: 'Al que es digno (Marcos Witt)', url: 'https://www.youtube.com/watch?v=aH9VzQSY6Ks' },
+                { titulo: 'COVER - AL QUE ES DIGNO Y VENCIÓ', url: 'https://www.youtube.com/watch?v=QflHwQuAvE0' },
+                { titulo: 'Tutorial Mi Dios Todopoderoso (Repetido)', url: 'https://www.youtube.com/watch?v=9hqAPsAviYY' }
+            ]
+        };
+
+        // ============================================
+        // GESTOR DE TAREAS
+        // ============================================
+        // Fecha LOCAL: evita que el plan cambie de día según la hora UTC.
+        function fechaLocal(date = new Date()) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+        function escaparHTML(value) {
+            return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+        class TaskManager {
+            constructor() {
+                this.tasks = JSON.parse(localStorage.getItem('guitarTasks') || '[]');
+                this.editIndex = -1;
+            }
+
+            getTasks() {
+                return this.tasks;
+            }
+
+            addTask(text, hora, categoria) {
+                const task = {
+                    id: Date.now(),
+                    text: text,
+                    hora: hora || '09:00',
+                    categoria: categoria || 'principal',
+                    completada: false,
+                    fecha: fechaLocal()
+                };
+                this.tasks.push(task);
+                this.save();
+                return task;
+            }
+
+            deleteTask(id) {
+                this.tasks = this.tasks.filter(t => t.id !== id);
+                this.save();
+            }
+
+            toggleTask(id) {
+                const task = this.tasks.find(t => t.id === id);
+                if (task) {
+                    task.completada = !task.completada;
+                    this.save();
+                }
+            }
+
+            updateTask(id, data) {
+                const task = this.tasks.find(t => t.id === id);
+                if (task) {
+                    Object.assign(task, data);
+                    this.save();
+                }
+            }
+
+            getProgress() {
+                const hoy = this.getTasksByDate(fechaLocal());
+                if (!hoy.length) return 0;
+                const completadas = hoy.filter(t => t.completada).length;
+                return Math.round((completadas / hoy.length) * 100);
+            }
+
+            getTasksByDate(fecha) {
+                return this.tasks.filter(t => t.fecha === fecha);
+            }
+
+            save() {
+                localStorage.setItem('guitarTasks', JSON.stringify(this.tasks));
+                this.render();
+                this.updateStats();
+            }
+
+            render() {
+                const list = document.getElementById('taskList');
+                const today = fechaLocal();
+                const todayTasks = this.tasks.filter(t => t.fecha === today);
+
+                if (todayTasks.length === 0) {
+                    list.innerHTML = `
+                        <div style="text-align:center;padding:30px 20px;color:var(--text-muted);">
+                            <i class="fas fa-clipboard-list" style="font-size:32px;display:block;margin-bottom:12px;opacity:0.3;"></i>
+                            <p style="font-size:15px;">No hay tareas para hoy</p>
+                            <p style="font-size:13px;margin-top:4px;">Añade tu primera tarea usando el formulario</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Ordenar por hora
+                todayTasks.sort((a, b) => a.hora.localeCompare(b.hora));
+
+                list.innerHTML = todayTasks.map((task, index) => {
+                    const categoriaLabels = {
+                        calentamiento: { label: '🔥 Calentamiento', class: 'calentamiento' },
+                        principal: { label: '🎯 Principal', class: 'principal' },
+                        extra: { label: '📌 Extra', class: 'extra' },
+                        teoria: { label: '📖 Teoría', class: 'teoria' }
+                    };
+                    const cat = categoriaLabels[task.categoria] || categoriaLabels.principal;
+
+                    return `
+                        <div class="task-item ${task.completada ? 'completada' : ''}" data-id="${task.id}">
+                            <button class="task-check ${task.completada ? 'completado' : ''}" data-id="${task.id}">
+                                ${task.completada ? '<i class="fas fa-check"></i>' : ''}
+                            </button>
+                            <div class="task-info">
+                                <div class="task-text">${escaparHTML(task.text)}</div>
+                                <div class="task-meta">
+                                    <span><i class="far fa-clock"></i> ${task.hora}</span>
+                                    <span class="task-category ${cat.class}">${cat.label}</span>
+                                    ${task.fecha !== today ? `<span><i class="far fa-calendar-alt"></i> ${task.fecha}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <button class="btn-edit" data-id="${task.id}" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-delete" data-id="${task.id}" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                this.updateStats();
+            }
+
+            updateStats() {
+                const progress = this.getProgress();
+                document.getElementById('progressFill').style.width = `${progress}%`;
+                document.getElementById('progressText').textContent = `${progress}%`;
+                const total = this.tasks.filter(t => t.fecha === fechaLocal()).length;
+                document.getElementById('count-tareas').textContent = `${total} tareas`;
+            }
+        }
+
+        // ============================================
+        // ESTADO GENERAL
+        // ============================================
+        const state = {
+            seccionActual: 'inicio',
+            favoritos: JSON.parse(localStorage.getItem('guitarFavs') || '[]'),
+            vistos: JSON.parse(localStorage.getItem('guitarVistos') || '[]'),
+            soloFavoritos: false,
+            busqueda: '',
+            zoom: 100,
+            speed: 1,
+            tema: localStorage.getItem('guitarTheme') || 'dark',
+            videoActual: null,
+            videoActualTitulo: null,
+            popupAbierto: false,
+            taskManager: new TaskManager()
+        };
+
+        // ============================================
+        // FUNCIONES PRINCIPALES
+        // ============================================
+
+        // Extraer ID de YouTube
+        function getYouTubeId(url) {
+            const patterns = [
+                /youtu\.be\/([^?&]+)/,
+                /youtube\.com\/watch\?v=([^&]+)/,
+                /youtube\.com\/embed\/([^?&]+)/
+            ];
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
+        // Obtener miniatura
+        function getThumbnail(url) {
+            const id = getYouTubeId(url);
+            return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : null;
+        }
+
+        // Renderizar grid de clases
+        function renderGrid(seccionId) {
+            const items = DATA[seccionId] || [];
+            const grid = document.querySelector(`.grid[data-section="${seccionId}"]`);
+            if (!grid) return;
+
+            let filteredItems = [...items];
+
+            if (state.soloFavoritos) {
+                filteredItems = filteredItems.filter(item =>
+                    state.favoritos.some(f => f.url === item.url)
+                );
+            }
+
+            if (state.busqueda) {
+                const search = state.busqueda.toLowerCase();
+                filteredItems = filteredItems.filter(item =>
+                    item.titulo.toLowerCase().includes(search)
+                );
+            }
+
+            grid.innerHTML = '';
+
+            if (filteredItems.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-secondary);">
+                        <i class="fas fa-search" style="font-size:40px;margin-bottom:20px;display:block;opacity:0.3;"></i>
+                        <p style="font-size:18px;font-weight:500;">
+                            ${state.soloFavoritos ? 'No tienes clases favoritas aún ❤️' : 'No se encontraron clases con esa búsqueda'}
+                        </p>
+                        <p style="font-size:14px;margin-top:10px;opacity:0.5;">
+                            ${state.soloFavoritos ? '¡Guarda tus clases favoritas con el corazón ❤️!' : 'Intenta con otra palabra clave'}
+                        </p>
+                    </div>
+                `;
+                updateCounters(seccionId, items.length, 0);
+                return;
+            }
+
+            filteredItems.forEach((item, index) => {
+                const isFav = state.favoritos.some(f => f.url === item.url);
+                const isVisto = state.vistos.includes(item.url);
+                const thumbnail = getThumbnail(item.url);
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="thumbnail">
+                        ${thumbnail ? `<img src="${thumbnail}" alt="${escaparHTML(item.titulo)}" loading="lazy" />` : ''}
+                        <div class="play-overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        ${isVisto ? '<div class="badge-status visto"><i class="fas fa-check"></i> Visto</div>' : ''}
+                        ${isFav ? '<div class="badge-status favorito-badge"><i class="fas fa-heart"></i></div>' : ''}
+                    </div>
+                    <div class="card-body">
+                        <div class="card-number">#${String(index + 1).padStart(2, '0')}</div>
+                        <div class="card-title">${escaparHTML(item.titulo)}</div>
+                        <div class="card-actions">
+                            <button class="btn-play" data-url="${item.url}" data-titulo="${escaparHTML(item.titulo)}">
+                                <i class="fas fa-play"></i> Ver
+                            </button>
+                            <button class="btn-fav ${isFav ? 'favorito' : ''}" data-url="${item.url}" data-titulo="${escaparHTML(item.titulo)}">
+                                <i class="fas ${isFav ? 'fa-heart' : 'fa-heart'}"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            updateCounters(seccionId, items.length, filteredItems.length);
+            updateStats();
+        }
+
+        // Actualizar contadores
+        function updateCounters(seccionId, total, filtered) {
+            const countSpan = document.getElementById(`count-${seccionId}`);
+            if (countSpan) {
+                countSpan.textContent = `${filtered} de ${total} videos`;
+            }
+            const badge = document.getElementById(`badge-${seccionId}`);
+            if (badge) {
+                badge.textContent = total;
+            }
+        }
+
+        // Actualizar estadísticas
+        function updateStats() {
+            const totalVideos = Object.values(DATA).reduce((acc, arr) => acc + arr.length, 0);
+            document.getElementById('totalVideos').textContent = totalVideos;
+            document.getElementById('totalFavs').textContent = state.favoritos.length;
+            document.getElementById('totalVistos').textContent = state.vistos.length;
+            
+            const racha = calcularRacha();
+            document.getElementById('rachaDias').textContent = racha;
+            
+            document.getElementById('favCount').textContent = state.favoritos.length;
+            const percent = totalVideos ? Math.round(state.vistos.length / totalVideos * 100) : 0;
+            const journeyPercent = document.getElementById('journeyPercent');
+            if(journeyPercent) journeyPercent.textContent = `${percent}%`;
+            const journeyFill = document.getElementById('journeyFill');
+            if(journeyFill) journeyFill.style.width = `${Math.min(100, percent)}%`;
+        }
+
+        // Calcular racha
+        function calcularRacha() {
+            const dias = new Set(state.vistos.map(url => {
+                const valor = localStorage.getItem(`visto_${url}`);
+                return valor ? fechaLocal(new Date(valor)) : null;
+            }).filter(Boolean));
+            if (!dias.size) return 0;
+            const fecha = new Date();
+            if (!dias.has(fechaLocal(fecha))) fecha.setDate(fecha.getDate()-1);
+            let racha = 0;
+            while (dias.has(fechaLocal(fecha))) {
+                racha++;
+                fecha.setDate(fecha.getDate()-1);
+            }
+            return racha;
+        }
+
+        // Renderizar todas las secciones
+        function renderAll() {
+            Object.keys(DATA).forEach(id => {
+                if (id !== 'inicio') renderGrid(id);
+            });
+            updateStats();
+            state.taskManager.render();
+        }
+
+        // Cambiar sección
+        function cambiarSeccion(id) {
+            state.seccionActual = id;
+            
+            document.querySelectorAll('.seccion').forEach(sec => {
+                sec.classList.remove('activa');
+                sec.style.display = 'none';
+            });
+            
+            const target = document.getElementById(id);
+            if (target) {
+                target.classList.add('activa');
+                target.style.display = 'block';
+            }
+            
+            document.querySelectorAll('.nav-menu button').forEach(btn => {
+                btn.classList.toggle('activo', btn.dataset.seccion === id);
+            });
+
+            if (id !== 'inicio') {
+                renderGrid(id);
+            } else {
+                state.taskManager.render();
+            }
+        }
+
+        // Toggle favorito
+        function toggleFavorito(url, titulo) {
+            const index = state.favoritos.findIndex(f => f.url === url);
+            let message = '';
+            let icon = '❤️';
+            
+            if (index >= 0) {
+                state.favoritos.splice(index, 1);
+                message = `"${titulo}" eliminado de favoritos`;
+                icon = '💔';
+            } else {
+                state.favoritos.push({ url, titulo });
+                message = `"${titulo}" añadido a favoritos`;
+                icon = '❤️';
+            }
+            
+            localStorage.setItem('guitarFavs', JSON.stringify(state.favoritos));
+            renderGrid(state.seccionActual);
+            updateStats();
+            mostrarToast(message, icon);
+
+            if (state.popupAbierto) {
+                actualizarPopupFav();
+            }
+        }
+
+        // Marcar como visto
+        function marcarVisto(url) {
+            if (!state.vistos.includes(url)) {
+                state.vistos.push(url);
+                localStorage.setItem('guitarVistos', JSON.stringify(state.vistos));
+                localStorage.setItem(`visto_${url}`, new Date().toISOString());
+                updateStats();
+                renderGrid(state.seccionActual);
+            }
+        }
+
+        // Actualizar popup favorito
+        function actualizarPopupFav() {
+            const isFav = state.favoritos.some(f => f.url === state.videoActual);
+            const favBtn = document.getElementById('popupFavBtn');
+            
+            if (isFav) {
+                favBtn.innerHTML = '<i class="fas fa-heart"></i> Quitar de favoritos';
+                favBtn.classList.add('favorito');
+            } else {
+                favBtn.innerHTML = '<i class="fas fa-heart"></i> Añadir a favoritos';
+                favBtn.classList.remove('favorito');
+            }
+        }
+
+        // Abrir popup
+        function abrirPopup(url, titulo) {
+            state.videoActual = url;
+            state.videoActualTitulo = titulo;
+            state.popupAbierto = true;
+
+            document.getElementById('popupVideoTitle').textContent = titulo;
+            document.getElementById('popupTitle').textContent = `🎸 ${titulo}`;
+            
+            const videoId = getYouTubeId(url);
+            const stage = document.getElementById('videoStage');
+            stage.replaceChildren();
+            if (videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+                const iframe = document.createElement('iframe');
+                iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&enablejsapi=1&origin=${encodeURIComponent(location.origin === "null" ? "https://www.youtube-nocookie.com" : location.origin)}`;
+                iframe.id = "studioYTPlayer";
+                iframe.title = titulo;
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+                iframe.allowFullscreen = true;
+                stage.appendChild(iframe);
+            } else {
+                stage.textContent = 'No es posible mostrar este video aquí. Puedes abrirlo en YouTube.';
+            }
+            document.getElementById('popupOpenYouTube').onclick = function() {
+                window.open(url, '_blank', 'noopener,noreferrer');
+                marcarVisto(url);
+                cerrarPopup();
+            };
+
+            actualizarPopupFav();
+
+            const overlay = document.getElementById('popupOverlay');
+            overlay.classList.add('abierto');
+            document.body.style.overflow = 'hidden';
+
+            mostrarToast(`▶️ Abriendo: ${titulo}`, '▶️');
+        }
+
+        // Cerrar popup
+        function cerrarPopup() {
+            const overlay = document.getElementById('popupOverlay');
+            overlay.classList.remove('abierto');
+            document.body.style.overflow = '';
+            state.popupAbierto = false;
+            document.getElementById('videoStage').replaceChildren();
+        }
+
+        // Mostrar toast
+        function mostrarToast(mensaje, icono = '🎸') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <span class="toast-icon">${icono}</span>
+                <span class="toast-message">${escaparHTML(mensaje)}</span>
+            `;
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.add('visible');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }, 3000);
+        }
+
+        // Cambiar tema
+        function aplicarTema() {
+            const light = state.tema === 'light';
+            document.body.classList.toggle('light-mode', light);
+            // Los colores se controlan mediante variables CSS para evitar estilos antiguos.
+            ['--bg-primary','--bg-secondary','--bg-card','--bg-card-hover','--text-primary','--text-secondary','--text-muted','--border-color'].forEach(k => document.documentElement.style.removeProperty(k));
+            document.querySelector('#themeToggle i').className = light ? 'fas fa-sun' : 'fas fa-moon';
+            document.getElementById('themeToggle').setAttribute('aria-label',light?'Activar modo oscuro':'Activar modo claro');
+        }
+        function toggleTheme() {
+            state.tema = state.tema === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('guitarTheme',state.tema);
+            aplicarTema();
+            mostrarToast(state.tema === 'light' ? 'Modo claro activado' : 'Modo oscuro activado','🎨');
+        }
+
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aplicar tema guardado
+            aplicarTema();
+
+            // Fecha actual
+            const fecha = new Date();
+            document.getElementById('fechaTexto').textContent = fecha.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Renderizar todo
+            renderAll();
+            cambiarSeccion('inicio');
+
+            // ========== NAVEGACIÓN ==========
+            document.querySelectorAll('.nav-menu button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.seccion;
+                    if (id) cambiarSeccion(id);
+                });
+            });
+
+            document.getElementById('goHome').addEventListener('click', function(e) {
+                e.preventDefault();
+                cambiarSeccion('inicio');
+            });
+
+            // ========== BÚSQUEDA ==========
+            let searchTimeout;
+            document.getElementById('searchInput').addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    state.busqueda = this.value.trim();
+                    if (state.seccionActual !== 'inicio') {
+                        renderGrid(state.seccionActual);
+                    }
+                }, 300);
+            });
+
+            // ========== FILTROS ==========
+            document.getElementById('favFilterBtn').addEventListener('click', function() {
+                state.soloFavoritos = !state.soloFavoritos;
+                this.classList.toggle('activo');
+                document.getElementById('favToggle').classList.toggle('activo');
+                if (state.seccionActual !== 'inicio') {
+                    renderGrid(state.seccionActual);
+                }
+                mostrarToast(state.soloFavoritos ? '❤️ Mostrando solo favoritos' : '📚 Mostrando todas las clases', 
+                    state.soloFavoritos ? '❤️' : '📚');
+            });
+
+            document.getElementById('favToggle').addEventListener('click', function() {
+                document.getElementById('favFilterBtn').click();
+            });
+
+            document.getElementById('resetFilterBtn').addEventListener('click', function() {
+                state.soloFavoritos = false;
+                state.busqueda = '';
+                document.getElementById('searchInput').value = '';
+                document.getElementById('favFilterBtn').classList.remove('activo');
+                document.getElementById('favToggle').classList.remove('activo');
+                if (state.seccionActual !== 'inicio') {
+                    renderGrid(state.seccionActual);
+                }
+                mostrarToast('🔄 Filtros restablecidos', '✅');
+            });
+
+            // ========== CONTROLES ==========
+            let zoomLevel = 100;
+            document.getElementById('zoomIn').addEventListener('click', function() {
+                zoomLevel = Math.min(zoomLevel + 10, 130);
+                document.getElementById('mainContent').style.zoom = `${zoomLevel}%`;
+                document.getElementById('zoomLevel').textContent = `${zoomLevel}%`;
+            });
+
+            document.getElementById('zoomOut').addEventListener('click', function() {
+                zoomLevel = Math.max(zoomLevel - 10, 80);
+                document.getElementById('mainContent').style.zoom = `${zoomLevel}%`;
+                document.getElementById('zoomLevel').textContent = `${zoomLevel}%`;
+            });
+
+            // ========== GESTOR DE TAREAS ==========
+            const taskManager = state.taskManager;
+
+            // Añadir tarea
+            document.getElementById('btnAddTask').addEventListener('click', function() {
+                const text = document.getElementById('taskInput').value.trim();
+                const hora = document.getElementById('taskHora').value;
+                const categoria = document.getElementById('taskCategoria').value;
+
+                if (!text) {
+                    mostrarToast('Por favor, escribe una descripción', '⚠️');
+                    return;
+                }
+
+                taskManager.addTask(text, hora, categoria);
+                document.getElementById('taskInput').value = '';
+                mostrarToast('✅ Tarea añadida correctamente', '✅');
+            });
+
+            // Enter para añadir tarea
+            document.getElementById('taskInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('btnAddTask').click();
+                }
+            });
+
+            // Eventos de la lista de tareas (delegación)
+            document.getElementById('taskList').addEventListener('click', function(e) {
+                const target = e.target.closest('button');
+                if (!target) return;
+
+                const id = parseInt(target.dataset.id);
+
+                // Check (completar)
+                if (target.classList.contains('task-check')) {
+                    taskManager.toggleTask(id);
+                    mostrarToast('🔄 Estado actualizado', '🔄');
+                    return;
+                }
+
+                // Editar
+                if (target.classList.contains('btn-edit')) {
+                    const task = taskManager.tasks.find(t => t.id === id);
+                    if (task) {
+                        document.getElementById('modalTaskText').value = task.text;
+                        document.getElementById('modalTaskHora').value = task.hora;
+                        document.getElementById('modalTaskCategoria').value = task.categoria;
+                        taskManager.editIndex = id;
+                        document.getElementById('modalOverlay').classList.add('abierto');
+                    }
+                    return;
+                }
+
+                // Eliminar
+                if (target.classList.contains('btn-delete')) {
+                    const task = taskManager.tasks.find(t => t.id === id);
+                    if (task && confirm(`¿Eliminar la tarea "${task.text}"?`)) {
+                        taskManager.deleteTask(id);
+                        mostrarToast('🗑️ Tarea eliminada', '🗑️');
+                    }
+                }
+            });
+
+            // Modal de edición
+            document.getElementById('modalSaveBtn').addEventListener('click', function() {
+                const id = taskManager.editIndex;
+                const text = document.getElementById('modalTaskText').value.trim();
+                const hora = document.getElementById('modalTaskHora').value;
+                const categoria = document.getElementById('modalTaskCategoria').value;
+
+                if (!text) {
+                    mostrarToast('Por favor, escribe una descripción', '⚠️');
+                    return;
+                }
+
+                taskManager.updateTask(id, { text, hora, categoria });
+                document.getElementById('modalOverlay').classList.remove('abierto');
+                mostrarToast('💾 Tarea actualizada', '💾');
+            });
+
+            document.getElementById('modalCancelBtn').addEventListener('click', function() {
+                document.getElementById('modalOverlay').classList.remove('abierto');
+            });
+
+            document.getElementById('closeModal').addEventListener('click', function() {
+                document.getElementById('modalOverlay').classList.remove('abierto');
+            });
+
+            document.getElementById('modalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    document.getElementById('modalOverlay').classList.remove('abierto');
+                }
+            });
+
+            // ========== REPRODUCTOR (POPUP) ==========
+            document.addEventListener('click', function(e) {
+                const playBtn = e.target.closest('.btn-play');
+                if (playBtn) {
+                    const url = playBtn.dataset.url;
+                    const titulo = playBtn.dataset.titulo;
+                    if (url && titulo) {
+                        abrirPopup(url, titulo);
+                    }
+                }
+
+                const favBtn = e.target.closest('.btn-fav');
+                if (favBtn) {
+                    const url = favBtn.dataset.url;
+                    const titulo = favBtn.dataset.titulo;
+                    if (url && titulo) {
+                        toggleFavorito(url, titulo);
+                    }
+                }
+
+                const thumbnail = e.target.closest('.thumbnail');
+                if (thumbnail && !e.target.closest('.play-overlay')) {
+                    const card = thumbnail.closest('.card');
+                    const playBtn = card?.querySelector('.btn-play');
+                    if (playBtn) playBtn.click();
+                }
+            });
+
+            // Cerrar popup
+            document.getElementById('closePopup').addEventListener('click', cerrarPopup);
+            document.getElementById('popupCerrarBtn').addEventListener('click', cerrarPopup);
+            document.getElementById('popupOverlay').addEventListener('click', function(e) {
+                if (e.target === this) cerrarPopup();
+            });
+
+            // Favorito en popup
+            document.getElementById('popupFavBtn').addEventListener('click', function() {
+                if (state.videoActual && state.videoActualTitulo) {
+                    toggleFavorito(state.videoActual, state.videoActualTitulo);
+                }
+            });
+
+            // ========== TEMA ==========
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+            // ========== SCROLL TOP ==========
+            const scrollBtn = document.getElementById('scrollTopBtn');
+            window.addEventListener('scroll', function() {
+                scrollBtn.classList.toggle('visible', window.scrollY > 400);
+            });
+
+            scrollBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // ========== ATAJOS DE TECLADO ==========
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                    document.getElementById('searchInput').select();
+                }
+                
+                if (e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+
+                if (e.key === 'f' || e.key === 'F') {
+                    document.getElementById('favFilterBtn').click();
+                }
+                
+                if (e.key === 'Escape') {
+                    if (state.popupAbierto) {
+                        cerrarPopup();
+                    } else if (document.getElementById('modalOverlay').classList.contains('abierto')) {
+                        document.getElementById('modalOverlay').classList.remove('abierto');
+                    } else {
+                        document.getElementById('searchInput').value = '';
+                        state.busqueda = '';
+                        if (state.seccionActual !== 'inicio') {
+                            renderGrid(state.seccionActual);
+                        }
+                        document.getElementById('searchInput').blur();
+                    }
+                }
+
+                const num = parseInt(e.key);
+                if (num >= 1 && num <= 6) {
+                    const buttons = document.querySelectorAll('.nav-menu button');
+                    if (buttons[num - 1]) {
+                        buttons[num - 1].click();
+                    }
+                }
+            });
+
+            // ========== CONSEJOS ==========
+            const consejos = [
+                "La práctica constante es la clave del éxito. Dedica al menos 15 minutos diarios a calentar antes de tus sesiones de estudio.",
+                "La técnica de 'slow practice' (practicar lento) es la mejor manera de desarrollar velocidad y precisión.",
+                "Graba tus sesiones de práctica para identificar áreas de mejora. ¡Te sorprenderás de tu progreso!",
+                "La disciplina es más importante que la motivación. Crea una rutina y síguela, incluso cuando no tengas ganas.",
+                "Aprende teoría musical poco a poco. Comprender la estructura de la música te hará un mejor guitarrista.",
+                "Tocar con otros músicos es una de las mejores formas de mejorar. Busca oportunidades para hacerlo.",
+                "La relajación es clave. Tensar los músculos afecta tu técnica y tu sonido.",
+                "Escucha mucha música de diferentes géneros. Amplía tu oído y tu vocabulario musical.",
+                "No te compares con otros. Cada guitarrista tiene su propio camino y ritmo de aprendizaje.",
+                "La paciencia es una virtud. Los grandes guitarristas no se hicieron en un día."
+            ];
+
+            document.getElementById('consejoDia').textContent = consejos[Math.floor(Math.random() * consejos.length)];
+
+            // ========== MENSAJE DE BIENVENIDA ==========
+            setTimeout(() => {
+                const total = Object.values(DATA).reduce((acc, arr) => acc + arr.length, 0);
+                mostrarToast(`🎸 ${total} clases cargadas. ¡A practicar!`, '🎸');
+            }, 500);
+
+            console.log('🎸 Guitar Master v5.0 cargado correctamente!');
+            console.log(`📚 ${Object.keys(DATA).length} secciones, ${Object.values(DATA).reduce((acc, arr) => acc + arr.length, 0)} videos totales`);
+            console.log(`❤️ ${state.favoritos.length} clases en favoritos`);
+            console.log(`👁️ ${state.vistos.length} clases vistas`);
+            console.log(`📋 ${state.taskManager.tasks.length} tareas planificadas`);
+        });
+    
+        // HERRAMIENTAS DEL NUEVO ESTUDIO MUSICAL
+        document.addEventListener('DOMContentLoaded', () => {
+            const go = (id) => { cambiarSeccion(id); window.scrollTo({top:document.querySelector('.nav-container').offsetTop,behavior:'smooth'}); };
+            document.getElementById('startLearning')?.addEventListener('click',()=>go('clases_cards'));
+            document.getElementById('continueLearning')?.addEventListener('click',()=>go('clases_cards'));
+            document.getElementById('jumpPractice')?.addEventListener('click',()=>document.querySelector('.planner-container').scrollIntoView({behavior:'smooth',block:'center'}));
+            const notes=document.getElementById('practiceNotes');
+            notes.value=localStorage.getItem('guitarPracticeNotes')||'';
+            notes.addEventListener('input',()=>{localStorage.setItem('guitarPracticeNotes',notes.value);document.getElementById('notesStatus').textContent='✓ Apuntes guardados en este navegador';});
+            let seconds=900, duration=900, timer=null;
+            const display=document.getElementById('timerDisplay'),toggle=document.getElementById('timerToggle');
+            const paint=()=>{display.textContent=`${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;};
+            const stop=()=>{clearInterval(timer);timer=null;toggle.innerHTML='<i class="fas fa-play"></i> Iniciar sesión';};
+            document.querySelectorAll('[data-minutes]').forEach(btn=>btn.addEventListener('click',()=>{stop();duration=Number(btn.dataset.minutes)*60;seconds=duration;document.querySelectorAll('[data-minutes]').forEach(b=>b.classList.toggle('selected',b===btn));paint();}));
+            toggle.addEventListener('click',()=>{if(timer){stop();return;}if(seconds===0)seconds=duration;toggle.innerHTML='<i class="fas fa-pause"></i> Pausar sesión';timer=setInterval(()=>{seconds=Math.max(0,seconds-1);paint();if(seconds===0){stop();mostrarToast('¡Sesión terminada! Excelente práctica 🎸','🎉');}},1000);});
+            document.getElementById('timerReset').addEventListener('click',()=>{stop();seconds=duration;paint();});
+            paint();
+        });
+</script>
+
+<script id="premium-features">
+(()=>{'use strict';
+const $=id=>document.getElementById(id), safe=(str)=>String(str||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const read=(key,def)=>{try{return JSON.parse(localStorage.getItem(key))??def}catch{return def}};
+let queue=read('studioQueue',[]), notes=read('studioClassNotes',{}), noteUrl='', audio=null,metronome=null,beat=0,tone=null,taps=[],pomo=null,pomoLength=1500,pomoSeconds=1500, ytPlayer=null,abStart=null,abEnd=null,abTimer=null,playerTicket=0;
+function allVideos(){return Object.entries(DATA).flatMap(([course,arr])=>arr.map((item,i)=>({...item,course,index:i}))).filter(x=>x.url)}
+function findVideo(url){return allVideos().find(x=>x.url===url)}
+function toast(m){if(typeof mostrarToast==='function')mostrarToast(m,'🎸')}
+function openVideo(item){if(item)abrirPopup(item.url,item.titulo)}
+function chordify(url){const id=getYouTubeId(url);window.open('https://chordify.net/search/'+encodeURIComponent(id||url),'_blank','noopener,noreferrer')}
+function saveQueue(){localStorage.setItem('studioQueue',JSON.stringify(queue));renderQueue()}
+function enqueue(url){if(!queue.includes(url)){queue.push(url);saveQueue();toast('Añadido a tu cola')}else toast('Esta clase ya está en la cola')}
+function renderQueue(){const el=$('playQueue');el.replaceChildren();if(!queue.length){el.textContent='Tu cola está vacía.';return}queue.forEach((url,i)=>{const item=findVideo(url);const div=document.createElement('div');div.className='route-step';const label=document.createElement('div');label.textContent=(i+1)+'. '+(item?.titulo||'Video guardado');div.appendChild(label);const actions=document.createElement('div');actions.className='studio-row';for(const [txt,cb] of [['▶ Ver',()=>item&&openVideo(item)],['↑',()=>{if(i){[queue[i-1],queue[i]]=[queue[i],queue[i-1]];saveQueue()}}],['↓',()=>{if(i<queue.length-1){[queue[i+1],queue[i]]=[queue[i],queue[i+1]];saveQueue()}}],['✕',()=>{queue.splice(i,1);saveQueue()}]]){const b=document.createElement('button');b.className='studio-btn';b.textContent=txt;b.onclick=cb;actions.appendChild(b)}div.appendChild(actions);el.appendChild(div)})}
+const stages=[['Primeros pasos','introducción|clase 0|cuerdas|partes de la guitarra|numeración de dedos|posición|calentamiento'],['Acordes y ritmo','acorde|rasgueo|ritmo|power chord|compás'],['Notas y teoría','diapasón|notas|alfabeto musical|bemoles|sostenidos|semitonos|escala mayor'],['Técnica','púa|mute|motricidad|mano derecha|ejercicio|digitación'],['Expresión e improvisación','improvisación|solo|fraseo|arpegio|pentatónica']];
+function renderRoute(){const arr=allVideos(),used=new Set(),out=$('learningRoute');out.replaceChildren();stages.forEach(([name,pattern],i)=>{const regs=new RegExp(pattern,'i'),items=arr.filter(x=>regs.test(x.titulo)&&!used.has(x.url)).slice(0,8);items.forEach(x=>used.add(x.url));const d=document.createElement('details');d.className='route-step';if(i===0)d.open=true;const summary=document.createElement('summary');summary.textContent=`${i+1}. ${name} · ${items.length} clases sugeridas`;d.appendChild(summary);const container=document.createElement('div');container.className='route-items';items.forEach(x=>{const b=document.createElement('button');b.className='route-chip'+(state.vistos.includes(x.url)?' done':'');b.textContent=(state.vistos.includes(x.url)?'✓ ':'▶ ')+x.titulo;b.title=x.course;b.onclick=()=>openVideo(x);container.appendChild(b)});if(!items.length)container.textContent='Aún no hay clases coincidentes en el catálogo.';d.appendChild(container);out.appendChild(d)})}
+function progress(){const count=allVideos().length,views=new Set(state.vistos).size,pct=count?Math.min(100,Math.round(views/count*100)):0;$('studioRing').style.setProperty('--pct',pct);$('studioPercent').textContent=pct+'%';$('studioProgressTrack').style.width=pct+'%';$('studioProgressCaption').textContent=`${views} de ${count} clases abiertas (no verifica reproducción completa)`;const streak=calcularRacha(),fav=state.favoritos.length;const achievement=[['🌱 Primera clase',views>=1],['🎸 10 clases',views>=10],['🏆 50 clases',views>=50],['🔥 3 días',streak>=3],['💖 5 favoritos',fav>=5]];$('achievements').innerHTML=achievement.map(([t,yes])=>`<span class="achievement ${yes?'':'locked'}">${yes?'✓':'🔒'} ${t}</span>`).join('');renderRoute()}
+function search(){const query=$('globalSearch').value.trim().toLocaleLowerCase('es');const box=$('globalResults');box.replaceChildren();if(!query){box.textContent='Escribe para buscar en todas las clases.';return}const matches=allVideos().filter(v=>(v.titulo+' '+v.course).toLocaleLowerCase('es').includes(query)).slice(0,30);matches.forEach(item=>{const b=document.createElement('button');b.className='route-chip';b.textContent=item.titulo+' · '+item.course;b.onclick=()=>openVideo(item);box.appendChild(b)});if(!matches.length)box.textContent='No se encontraron clases.'}
+function updateCards(root=document){root.querySelectorAll('.card').forEach(card=>{if(card.querySelector('.compact-card-actions'))return;const b=card.querySelector('.btn-play');if(!b)return;const url=b.dataset.url, title=b.dataset.titulo;const row=document.createElement('div');row.className='compact-card-actions';for(const [txt,cb] of [['🎼 Chordify',()=>chordify(url)],['＋ Cola',()=>enqueue(url)],['📝 Notas',()=>openNotes(url,title)]]){const el=document.createElement('button');el.className='studio-btn';el.textContent=txt;el.onclick=e=>{e.stopPropagation();cb()};row.appendChild(el)}card.querySelector('.card-body')?.appendChild(row)})}
+function openNotes(url,title){noteUrl=url;$('classNotesTitle').textContent='📝 '+(title||'Notas de clase');$('classNotesText').value=notes[url]||'';$('classNotesModal').classList.add('abierto')}
+function closeNotes(){$('classNotesModal').classList.remove('abierto');noteUrl=''}
+function saveNotes(){if(noteUrl){notes[noteUrl]=$('classNotesText').value;localStorage.setItem('studioClassNotes',JSON.stringify(notes));toast('Notas guardadas')}}
+function getAudio(){audio??=new (window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();return audio}
+function tick(strong){const ac=getAudio(),osc=ac.createOscillator(),gain=ac.createGain(),now=ac.currentTime;osc.frequency.value=strong?1100:750;gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.18,now+.003);gain.gain.exponentialRampToValueAtTime(.0001,now+.065);osc.connect(gain);gain.connect(ac.destination);osc.start(now);osc.stop(now+.07)}
+function stopMetro(){clearInterval(metronome);metronome=null;$('metronomeToggle').textContent='▶ Iniciar'}
+function metro(){if(metronome){stopMetro();return}beat=0;const run=()=>{const n=Number($('meterControl').value);tick(beat===0);$('beatDisplay').textContent=Array.from({length:n},(_,i)=>i===beat?'●':'·').join('  ');beat=(beat+1)%n};run();metronome=setInterval(run,60000/Math.max(30,Math.min(240,Number($('bpmControl').value)||80)));$('metronomeToggle').textContent='⏸ Detener'}
+function stopReference(){if(tone){try{tone.osc.stop()}catch{}tone=null}$('toneLabel').textContent='Afinación estándar E A D G B E'}
+function playReference(hz,label){stopReference();const ac=getAudio(),osc=ac.createOscillator(),gain=ac.createGain();osc.type='sine';osc.frequency.value=hz;gain.gain.value=.1;osc.connect(gain);gain.connect(ac.destination);osc.start();tone={osc,gain};$('toneLabel').textContent=label+' · '+hz.toFixed(2)+' Hz · tono continuo (detén al terminar)'}
+function pomoPaint(){$('pomodoroDisplay').textContent=String(Math.floor(pomoSeconds/60)).padStart(2,'0')+':'+String(pomoSeconds%60).padStart(2,'0')}
+function pomoStop(){clearInterval(pomo);pomo=null;$('pomoToggle').textContent='▶ Iniciar'}
+function togglePomo(){if(pomo){pomoStop();return}if(pomoSeconds===0)pomoSeconds=pomoLength;let last=Date.now();pomo=setInterval(()=>{const now=Date.now();const delta=Math.floor((now-last)/1000);if(delta>0){last+=delta*1000;pomoSeconds=Math.max(0,pomoSeconds-delta);pomoPaint()}if(pomoSeconds===0){pomoStop();toast('¡Sesión terminada!')}} ,250);$('pomoToggle').textContent='⏸ Pausar'}
+function focus(on){document.body.classList.toggle('focus-active',on);if(on&&!state.popupAbierto){const current=findVideo(state.videoActual)||allVideos()[0];if(current)openVideo(current)}if(!on&&state.popupAbierto)cerrarPopup()}
+function exportAll(){const keys=['guitarTasks','guitarFavs','guitarVistos','guitarTheme','guitarPracticeNotes','studioQueue','studioClassNotes','studioColor'];const payload={app:'GuitarStudio',version:1,exported:new Date().toISOString(),data:Object.fromEntries(keys.map(k=>[k,readRaw(k)])),dates:Object.fromEntries(state.vistos.map(url=>[url,localStorage.getItem('visto_'+url)]).filter(([,v])=>v))};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='guitarstudio-respaldo.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function readRaw(k){return localStorage.getItem(k)}
+async function importAll(file){if(!file||file.size>3000000){toast('Archivo demasiado grande o vacío');return}try{const payload=JSON.parse(await file.text()),allowed=['guitarTasks','guitarFavs','guitarVistos','guitarTheme','guitarPracticeNotes','studioQueue','studioClassNotes','studioColor'];if(payload.app!=='GuitarStudio'||!payload.data||typeof payload.data!=='object')throw Error('Formato no compatible');if(!confirm('Esta acción reemplazará los datos actuales de esta plataforma. ¿Continuar?'))return;for(const k of allowed){const value=payload.data[k];if(typeof value==='string'&&value.length<1000000)localStorage.setItem(k,value)}if(payload.dates&&typeof payload.dates==='object')for(const [url,date] of Object.entries(payload.dates)){if(/^https:\/\/www\.youtube\.com\/watch\?v=/.test(url)&&typeof date==='string')localStorage.setItem('visto_'+url,date)}toast('Datos importados. Actualizando…');location.reload()}catch(e){toast('No se pudo importar: '+e.message)}}
+function connectPlayer(){const ticket=++playerTicket;ytPlayer=null;abStart=null;abEnd=null;clearInterval(abTimer);if($('playerAB'))$('playerAB').textContent='🔁 Marcar punto A';function setup(){if(ticket!==playerTicket||!state.popupAbierto||!$('studioYTPlayer'))return;try{ytPlayer=new YT.Player('studioYTPlayer',{events:{onReady:()=>{if(ticket!==playerTicket)return;try{ytPlayer.setPlaybackRate(Number($('playerSpeed').value)||1)}catch{}}}});abTimer=setInterval(()=>{if(!ytPlayer||abStart===null||abEnd===null)return;try{if(ytPlayer.getCurrentTime()>=abEnd)ytPlayer.seekTo(abStart,true)}catch{}},200)}catch{}}if(window.YT?.Player){setTimeout(setup,100);return}if(!document.getElementById('ytIframeAPI')){const script=document.createElement('script');script.id='ytIframeAPI';script.src='https://www.youtube.com/iframe_api';document.head.appendChild(script)}const prior=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{if(typeof prior==='function')prior();setup()};}
+function changeAB(){if(!ytPlayer||typeof ytPlayer.getCurrentTime!=='function'){toast('Los controles requieren que YouTube permita insertar el video.');return}let time;try{time=ytPlayer.getCurrentTime()}catch{return}if(abStart===null){abStart=time;abEnd=null;$('playerAB').textContent='🔁 Definir punto B';toast('Punto A definido')}else if(abEnd===null){if(time<=abStart+0.4){toast('Avanza el video antes de marcar B');return}abEnd=time;$('playerAB').textContent='🔁 Quitar loop A–B';toast('Repetición A–B activada')}else{abStart=null;abEnd=null;$('playerAB').textContent='🔁 Marcar punto A';toast('Repetición A–B desactivada')}}
+function refreshPlayerButtons(){const stage=$('videoStage');if(!$('studioPlayerActions')){const row=document.createElement('div');row.id='studioPlayerActions';row.className='studio-row';row.style.cssText='justify-content:center;margin:10px 0';row.innerHTML='<button class="studio-btn" id="playerChordify">🎼 Chordify</button><button class="studio-btn" id="playerQueue">＋ Cola</button><button class="studio-btn" id="playerNotes">📝 Notas</button><button class="studio-btn" id="playerFullscreen">⛶ Pantalla completa</button><label class="studio-muted">Velocidad <select class="studio-select" id="playerSpeed"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label><button class="studio-btn" id="playerAB">🔁 Marcar punto A</button>';stage.after(row);$('playerChordify').onclick=()=>chordify(state.videoActual);$('playerQueue').onclick=()=>enqueue(state.videoActual);$('playerNotes').onclick=()=>openNotes(state.videoActual,state.videoActualTitulo);$('playerFullscreen').onclick=()=>stage.requestFullscreen?.();$('playerSpeed').onchange=e=>{try{ytPlayer?.setPlaybackRate(Number(e.target.value))}catch{toast('Velocidad no disponible en este video')}};$('playerAB').onclick=changeAB;}}
+function init(){const color=localStorage.getItem('studioColor')||'green';document.body.dataset.color=color;$('colorTheme').value=color;$('colorTheme').onchange=e=>{document.body.dataset.color=e.target.value;localStorage.setItem('studioColor',e.target.value)};$('globalSearch').oninput=search;$('metronomeToggle').onclick=metro;$('bpmControl').onchange=()=>{if(metronome){stopMetro();metro()}};$('meterControl').onchange=()=>{if(metronome){stopMetro();metro()}};$('tapTempo').onclick=()=>{const now=performance.now();taps=taps.filter(x=>now-x<3000);taps.push(now);if(taps.length>1){const intervals=taps.slice(1).map((v,i)=>v-taps[i]);$('bpmControl').value=Math.min(240,Math.max(30,Math.round(60000/(intervals.reduce((a,b)=>a+b,0)/intervals.length))));if(metronome){stopMetro();metro()}}};const tunings=[['E2',82.41],['A2',110],['D3',146.83],['G3',196],['B3',246.94],['E4',329.63]];tunings.forEach(([n,h])=>{const btn=document.createElement('button');btn.className='studio-btn';btn.textContent=n;btn.onclick=()=>playReference(h,n);$('tuningButtons').appendChild(btn)});$('stopTone').onclick=stopReference;$('pomoToggle').onclick=togglePomo;$('pomoReset').onclick=()=>{pomoStop();pomoSeconds=pomoLength;pomoPaint()};document.querySelectorAll('[data-pomo]').forEach(el=>el.onclick=()=>{pomoStop();pomoLength=el.dataset.pomo==='break'?300:Number(el.dataset.pomo)*60;pomoSeconds=pomoLength;$('pomodoroMode').textContent=el.dataset.pomo==='break'?'Descanso':'Tiempo de práctica';pomoPaint()});$('focusBtn').onclick=()=>focus(true);$('focusExit').onclick=()=>focus(false);$('clearQueue').onclick=()=>{if(confirm('¿Vaciar la cola de reproducción?')){queue=[];saveQueue()}};$('exportData').onclick=exportAll;$('importData').onchange=e=>{importAll(e.target.files[0]);e.target.value=''};$('classNotesClose').onclick=closeNotes;$('classNotesSave').onclick=()=>{saveNotes();closeNotes()};$('classNotesText').oninput=saveNotes;$('classNotesModal').onclick=e=>{if(e.target===$('classNotesModal'))closeNotes()};document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNotes();if(document.body.classList.contains('focus-active'))focus(false)}if(e.target.closest('input,textarea,select,[contenteditable]'))return;if(e.altKey&&e.key.toLowerCase()==='m'){e.preventDefault();metro()}if(e.altKey&&e.key.toLowerCase()==='p'){e.preventDefault();togglePomo()}if(e.altKey&&e.key.toLowerCase()==='e'){e.preventDefault();focus(!document.body.classList.contains('focus-active'))}});renderQueue();search();refreshPlayerButtons();updateCards();progress();const origOpen=abrirPopup;abrirPopup=function(...args){origOpen(...args);setTimeout(connectPlayer,130)};const origClose=cerrarPopup;cerrarPopup=function(...args){++playerTicket;clearInterval(abTimer);ytPlayer=null;return origClose(...args)};const originalRender=renderGrid;renderGrid=function(id){originalRender(id);updateCards();progress()};const origMark=marcarVisto;marcarVisto=function(url){origMark(url);progress()};const origFav=toggleFavorito;toggleFavorito=function(...args){origFav(...args);progress()};}
+document.addEventListener('DOMContentLoaded',init);
+})();
+</script>
+<script>
+// PWA: instalación y actualizaciones. El contenido externo (YouTube, fuentes) necesita conexión.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(error => console.warn('Service Worker:', error));
+  });
+}
+let deferredGuitarInstall = null;
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  deferredGuitarInstall = event;
+  const button = document.getElementById('pwaInstall');
+  if (button) button.hidden = false;
+});
+window.addEventListener('appinstalled', () => {
+  deferredGuitarInstall = null;
+  const button = document.getElementById('pwaInstall');
+  if (button) button.hidden = true;
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const button = document.getElementById('pwaInstall');
+  if (button) button.addEventListener('click', async () => {
+    if (!deferredGuitarInstall) return;
+    await deferredGuitarInstall.prompt();
+    deferredGuitarInstall = null;
+    button.hidden = true;
+  });
+});
+</script>
+</body>
+</html>
